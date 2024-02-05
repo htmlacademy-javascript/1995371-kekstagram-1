@@ -25,4 +25,13 @@ const createRandomUniqueIdGenerator = (min, max) => {
   };
 };
 
-export {getRandomInteger, getRandomArrayElement, createRandomUniqueIdGenerator};
+
+const createNewElement = (tagName, className) => {
+  const newElement = document.createElement(tagName);
+  newElement.classList.add(className);
+  return newElement;
+};
+
+const isEscapeKeydown = (evt) => evt.key === 'Escape';
+
+export {getRandomInteger, getRandomArrayElement, createRandomUniqueIdGenerator, createNewElement, isEscapeKeydown};
