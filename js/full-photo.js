@@ -1,32 +1,66 @@
 import {createNewElement, isEscapeKeydown} from './util.js';
+const COMMENTS_PER_TIME = 5;
 
 const fullPhoto = document.querySelector('.big-picture');
 const fullPhotoImage = fullPhoto.querySelector('.big-picture__img > img');
 const photoDescription = fullPhoto.querySelector('.social__caption');
 const likesCount = fullPhoto.querySelector('.likes-count');
-const commentsCount = fullPhoto.querySelector('.social__comment-count');
-const commentsQuantity = fullPhoto.querySelector('.comments-count');
+const fullCommentsCount = fullPhoto.querySelector('.social__comment-count');
+const commentsQuantity = fullCommentsCount.querySelector('.comments-count');
 const commentsList = fullPhoto.querySelector('.social__comments');
 const commentsLoader = fullPhoto.querySelector('.comments-loader');
 const closedButton = fullPhoto.querySelector('.big-picture__cancel');
 
+let onCommentsLoaderClick;
+
 const createComment = (commentInfo) => {
   const comment = createNewElement('li', 'social__comment');
   const commentAuthor = createNewElement('img', 'social__picture');
+  const commentText = createNewElement('p', 'social__text');
   commentAuthor.src = commentInfo.avatar;
   commentAuthor.alt = commentInfo.name;
   commentAuthor.width = 35;
   commentAuthor.height = 35;
-  const commentText = createNewElement('p', 'social__text');
   commentText.append(commentInfo.message);
   comment.append(commentAuthor, commentText);
   return comment;
 };
 
+const getCommentsPack = (commentsData, startIndex) => {
+  if (commentsData) {
+    const fragment = document.createDocumentFragment();
+    commentsData.slice(startIndex, startIndex + COMMENTS_PER_TIME).forEach((commentInfo) => {
+      fragment.append(createComment(commentInfo));
+    });
+    return fragment;
+  }
+  return null;
+};
+
+const addCommentsPack = (commentsData) => {
+  if (commentsData.length > 0) {
+    commentsList.append(getCommentsPack(commentsData, commentsList.children.length));
+  }
+
+  fullCommentsCount.childNodes[0].textContent = `${commentsList.children.length} из `;
+
+  if (commentsList.children.length === commentsData.length) {
+    commentsLoader.classList.add('hidden');
+  } else {
+    commentsLoader.classList.remove('hidden');
+  }
+};
+
+const getCommentsLoaderHandler = (commentsData) => {
+  onCommentsLoaderClick = () => {
+    addCommentsPack(commentsData);
+  };
+  return onCommentsLoaderClick;
+};
+
 const closeFullPhotoModal = () => {
   fullPhoto.classList.add('hidden');
-  commentsCount.classList.remove('hidden');
-  commentsLoader.classList.remove('hidden');
+  commentsLoader.removeEventListener('click', onCommentsLoaderClick);
   document.body.classList.remove('modal-open');
 };
 
@@ -46,21 +80,14 @@ const openFullPhotoModal = ({url, likes = 0, comments = [], description = ''}) =
   if (url) {
     fullPhotoImage.src = url;
     fullPhotoImage.alt = '';
+    photoDescription.textContent = description;
     likesCount.textContent = likes;
     commentsQuantity.textContent = comments.length;
     commentsList.innerHTML = '';
 
-    if (comments.length > 0) {
-      const fragment = document.createDocumentFragment();
-      comments.forEach((commentInfo) => {
-        fragment.append(createComment(commentInfo));
-      });
-      commentsList.append(fragment);
-    }
+    addCommentsPack(comments);
 
-    photoDescription.textContent = description;
-    commentsCount.classList.add('hidden');
-    commentsLoader.classList.add('hidden');
+    commentsLoader.addEventListener('click', getCommentsLoaderHandler(comments));
     document.body.classList.add('modal-open');
     document.addEventListener('keydown', onEscKeydown, {once: true});
     fullPhoto.classList.remove('hidden');

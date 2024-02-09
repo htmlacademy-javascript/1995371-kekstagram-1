@@ -1,7 +1,7 @@
 import {getRandomInteger, getRandomArrayElement, createRandomUniqueIdGenerator} from './util.js';
 
 const PHOTO_POSTS_QUANTITY = 25;
-const COMMENTS_QUANTITY = 6;
+const COMMENTS_QUANTITY = 13;
 
 const commentIdsQuantity = PHOTO_POSTS_QUANTITY * COMMENTS_QUANTITY;
 
