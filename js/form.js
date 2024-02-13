@@ -1,4 +1,4 @@
-import {isEscapeKeydown} from './util.js';
+import {isEscapeKeydown, createStateStorage, createMessageStorage} from './util.js';
 
 const HASHTAGS_MAX_QUANTITY = 5;
 const HASHTAG_MAX_LENGTH = 20;
@@ -9,6 +9,7 @@ const uploadImageButton = uploadForm.querySelector('#upload-file');
 const imageEditingModal = uploadForm.querySelector('.img-upload__overlay');
 const closeButton = imageEditingModal.querySelector('#upload-cancel');
 const hashtagInput = imageEditingModal.querySelector('.text__hashtags');
+const descriptionInput = imageEditingModal.querySelector('.text__description');
 
 const HashtagErrorMessage = {
   NOT_SHARP_FIRST: 'Хэш-тег должен начинаться с символа # (решётка)',
@@ -18,6 +19,10 @@ const HashtagErrorMessage = {
   DOUBLE: 'Один и тот же хэш-тег не может быть использован дважды',
   MAXQUANTITY: 'Укажите не более пяти хэш-тегов',
 };
+
+const hashtageErrorMessage = createMessageStorage();
+const hashtagFocusState = createStateStorage();
+const descriptionFocusState = createStateStorage();
 
 const isSharpFirst = (data) => !(data.find((element) => element[0] !== '#'));
 const isAlphanumericOnly = (data) => !(data.find((element) => element.slice(1).match(REGEX)));
@@ -36,8 +41,6 @@ const isContentUnique = (data) => {
 
   return true;
 };
-
-let hashtageErrorMessage = '';
 
 // Код показа формы
 const openImageEditingModal = () => {
@@ -62,7 +65,11 @@ const closeOpenImageEditingModal = () => {
 function onEscKeydown (evt) {
   if (isEscapeKeydown(evt)) {
     evt.preventDefault();
-    closeOpenImageEditingModal();
+
+    if (!(hashtagFocusState.getState() || descriptionFocusState.getState())) {
+      closeOpenImageEditingModal();
+      uploadForm.reset();
+    }
   }
 }
 
@@ -70,34 +77,38 @@ function onCloseButtonClick () {
   closeOpenImageEditingModal();
 }
 
+// Код валидации
+const pristine = new Pristine(uploadForm, {
+  classTo: 'img-upload__field-wrapper',
+  errorTextParent: 'img-upload__field-wrapper',
+});
 
-// Валидация
 const validateHashtags = (value) => {
   const hashtags = value.toLowerCase().split(' ').filter((element) => element.length > 0);
 
   switch (false) {
     case isSharpFirst(hashtags):
-      hashtageErrorMessage = HashtagErrorMessage.NOT_SHARP_FIRST;
+      hashtageErrorMessage.setMessageText(HashtagErrorMessage.NOT_SHARP_FIRST);
       return false;
 
     case isAlphanumericOnly(hashtags):
-      hashtageErrorMessage = HashtagErrorMessage.FORBIDDEN_SYMBOLS;
+      hashtageErrorMessage.setMessageText(HashtagErrorMessage.FORBIDDEN_SYMBOLS);
       return false;
 
     case isNotSharpOnly(hashtags):
-      hashtageErrorMessage = HashtagErrorMessage.SHARP_ONLY;
+      hashtageErrorMessage.setMessageText(HashtagErrorMessage.SHARP_ONLY);
       return false;
 
     case isLengthWithinLimit(hashtags):
-      hashtageErrorMessage = HashtagErrorMessage.MAXLENGTH;
+      hashtageErrorMessage.setMessageText(HashtagErrorMessage.MAXLENGTH);
       return false;
 
     case isContentUnique(hashtags):
-      hashtageErrorMessage = HashtagErrorMessage.DOUBLE;
+      hashtageErrorMessage.setMessageText(HashtagErrorMessage.DOUBLE);
       return false;
 
     case isQuantityWithinLimit(hashtags):
-      hashtageErrorMessage = HashtagErrorMessage.MAXQUANTITY;
+      hashtageErrorMessage.setMessageText(HashtagErrorMessage.MAXQUANTITY);
       return false;
 
     default:
@@ -105,20 +116,33 @@ const validateHashtags = (value) => {
   }
 };
 
-const getHashtageErrorMessage = () => hashtageErrorMessage;
+const getHashtageErrorMessage = () => hashtageErrorMessage.getMessageText();
 
-const pristine = new Pristine(uploadForm, {
-  classTo: 'img-upload__field-wrapper',
-  errorTextParent: 'img-upload__field-wrapper',
-});
-
-
-// если фокус находится в поле ввода хэш-тега, нажатие на Esc не должно приводить к закрытию формы редактирования изображения.
-// если фокус находится в поле ввода комментария, нажатие на Esc не должно приводить к закрытию формы редактирования изображения.
 
 uploadImageButton.addEventListener('change', onUploadImageButtonChange);
-pristine.addValidator(hashtagInput, validateHashtags, getHashtageErrorMessage);
+imageEditingModal.addEventListener('focusin', (evt) => {
+  switch (evt.target) {
+    case hashtagInput:
+      hashtagFocusState.setState(true);
+      return;
 
+    case descriptionInput:
+      descriptionFocusState.setState(true);
+  }
+});
+
+imageEditingModal.addEventListener('focusout', (evt) => {
+  switch (evt.target) {
+    case hashtagInput:
+      hashtagFocusState.setState(false);
+      return;
+
+    case descriptionInput:
+      descriptionFocusState.setState(false);
+  }
+});
+
+pristine.addValidator(hashtagInput, validateHashtags, getHashtageErrorMessage);
 uploadForm.addEventListener('submit', (evt) => {
   const valid = pristine.validate();
 

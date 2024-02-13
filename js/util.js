@@ -34,4 +34,38 @@ const createNewElement = (tagName, className) => {
 
 const isEscapeKeydown = (evt) => evt.key === 'Escape';
 
-export {getRandomInteger, getRandomArrayElement, createRandomUniqueIdGenerator, createNewElement, isEscapeKeydown};
+// Функция создания хранилища состояния
+const createStateStorage = (initValue = false) => ({
+  state: initValue,
+  setState,
+  getState,
+});
+
+function setState (newValue) {
+  if (newValue !== undefined) {
+    this.state = newValue;
+  }
+}
+
+function getState () {
+  return this.state;
+}
+
+// Функция создания хранилища сообщения
+const createMessageStorage = (initText = '') => ({
+  state: initText,
+  setMessageText,
+  getMessageText,
+});
+
+function setMessageText (newText) {
+  if (newText) {
+    this.state = newText;
+  }
+}
+
+function getMessageText () {
+  return this.state;
+}
+
+export {getRandomInteger, getRandomArrayElement, createRandomUniqueIdGenerator, createNewElement, isEscapeKeydown, createStateStorage, createMessageStorage};
