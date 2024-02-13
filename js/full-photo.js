@@ -1,4 +1,4 @@
-import {createNewElement, isEscapeKeydown} from './util.js';
+import {createNewElement, isEscapeKeydown, createCount} from './util.js';
 const COMMENTS_PER_TIME = 5;
 
 const fullPhoto = document.querySelector('.big-picture');
@@ -47,70 +47,70 @@ const onClosedButtonClick = () => {
 
 // Первый вариант
 
-const getCommentsPack = (commentsData, startIndex) => {
-  if (commentsData) {
-    const fragment = document.createDocumentFragment();
-    commentsData.slice(startIndex, startIndex + COMMENTS_PER_TIME).forEach((commentInfo) => {
-      fragment.append(createComment(commentInfo));
-    });
-    return fragment;
-  }
-  return null;
-};
+// const getCommentsPack = (commentsData, startIndex) => {
+//   if (commentsData) {
+//     const fragment = document.createDocumentFragment();
+//     commentsData.slice(startIndex, startIndex + COMMENTS_PER_TIME).forEach((commentInfo) => {
+//       fragment.append(createComment(commentInfo));
+//     });
+//     return fragment;
+//   }
+//   return null;
+// };
 
-const addCommentsPack = (commentsData) => {
-  if (commentsData) {
-    commentsList.append(getCommentsPack(commentsData, commentsList.children.length));
-  }
+// const addCommentsPack = (commentsData) => {
+//   if (commentsData) {
+//     commentsList.append(getCommentsPack(commentsData, commentsList.children.length));
+//   }
 
-  commentsCurrentQuantity.textContent = commentsList.children.length;
+//   commentsCurrentQuantity.textContent = commentsList.children.length;
 
-  if (commentsList.children.length === commentsData.length) {
-    commentsLoader.classList.add('hidden');
-  } else {
-    commentsLoader.classList.remove('hidden');
-  }
-};
+//   if (commentsList.children.length === commentsData.length) {
+//     commentsLoader.classList.add('hidden');
+//   } else {
+//     commentsLoader.classList.remove('hidden');
+//   }
+// };
 
-const getCommentsLoaderHandler = (commentsData) => {
-  onCommentsLoaderClick = () => {
-    addCommentsPack(commentsData);
-  };
-  return onCommentsLoaderClick;
-};
+// const getCommentsLoaderHandler = (commentsData) => {
+//   onCommentsLoaderClick = () => {
+//     addCommentsPack(commentsData);
+//   };
+//   return onCommentsLoaderClick;
+// };
 
-const openFullPhotoModal = ({url, likes = 0, comments = [], description = ''}) => {
-  if (url) {
-    fullPhotoImage.src = url;
-    fullPhotoImage.alt = '';
-    photoDescription.textContent = description;
-    likesCount.textContent = likes;
-    commentsQuantity.textContent = comments.length;
-    commentsList.innerHTML = '';
+// const openFullPhotoModal = ({url, likes = 0, comments = [], description = ''}) => {
+//   if (url) {
+//     fullPhotoImage.src = url;
+//     fullPhotoImage.alt = '';
+//     photoDescription.textContent = description;
+//     likesCount.textContent = likes;
+//     commentsQuantity.textContent = comments.length;
+//     commentsList.innerHTML = '';
 
-    addCommentsPack(comments);
+//     addCommentsPack(comments);
 
-    commentsLoader.addEventListener('click', getCommentsLoaderHandler(comments));
-    document.body.classList.add('modal-open');
-    document.addEventListener('keydown', onEscKeydown, {once: true});
-    fullPhoto.classList.remove('hidden');
-  }
-};
+//     commentsLoader.addEventListener('click', getCommentsLoaderHandler(comments));
+//     document.body.classList.add('modal-open');
+//     document.addEventListener('keydown', onEscKeydown, {once: true});
+//     fullPhoto.classList.remove('hidden');
+//   }
+// };
 
 
 // Второй вариант
 // альтернативный код с отображением комментов, где ты хранишь текущее отображение комментов и сколько есть у определенного поста
 
-// let renderedCommentsQuantity = 0;
+// const renderedCommentsQuantity = createCount();
 
-// const getCommentsPack = (commentsData, startIndex = renderedCommentsQuantity) => {
+// const getCommentsPack = (commentsData, startIndex = renderedCommentsQuantity.getValue()) => {
 //   if (commentsData) {
 //     const fragment = document.createDocumentFragment();
 //     commentsData
 //       .slice(startIndex, startIndex + COMMENTS_PER_TIME)
 //       .forEach((commentInfo) => {
 //         fragment.append(createComment(commentInfo));
-//         renderedCommentsQuantity++;
+//         renderedCommentsQuantity.increase();
 //       });
 //     return fragment;
 //   }
@@ -122,9 +122,9 @@ const openFullPhotoModal = ({url, likes = 0, comments = [], description = ''}) =
 //     commentsList.append(getCommentsPack(commentsData));
 //   }
 
-//   commentsCurrentQuantity.textContent = renderedCommentsQuantity;
+//   commentsCurrentQuantity.textContent = renderedCommentsQuantity.getValue();
 
-//   if (renderedCommentsQuantity === commentsData.length) {
+//   if (renderedCommentsQuantity.getValue() === commentsData.length) {
 //     commentsLoader.classList.add('hidden');
 //   }
 // };
@@ -145,7 +145,7 @@ const openFullPhotoModal = ({url, likes = 0, comments = [], description = ''}) =
 //     commentsQuantity.textContent = comments.length;
 //     commentsList.innerHTML = '';
 
-//     renderedCommentsQuantity = 0;
+//     renderedCommentsQuantity.setValue(0);
 //     commentsLoader.classList.remove('hidden');
 
 //     addCommentsPack(comments);
@@ -161,69 +161,69 @@ const openFullPhotoModal = ({url, likes = 0, comments = [], description = ''}) =
 // Третий вариант
 // в нем мы в разметку добавляем сразу все комменты, а потом при клике отображаем нужное кол-во
 
-// let visibleCommentsQuantity = 0;
+const visibleCommentsQuantity = createCount();
 
-// const getComments = (commentsData) => {
-//   if (commentsData) {
-//     const fragment = document.createDocumentFragment();
-//     commentsData.forEach((commentInfo) => {
-//       const commentElement = createComment(commentInfo);
-//       commentElement.classList.add('hidden');
-//       fragment.append(commentElement);
-//     });
-//     return fragment;
-//   }
-// };
+const getComments = (commentsData) => {
+  if (commentsData) {
+    const fragment = document.createDocumentFragment();
+    commentsData.forEach((commentInfo) => {
+      const commentElement = createComment(commentInfo);
+      commentElement.classList.add('hidden');
+      fragment.append(commentElement);
+    });
+    return fragment;
+  }
+};
 
-// const showComments = (commentElements, startIndex = visibleCommentsQuantity) => {
-//   if (commentElements) {
-//     for (let i = startIndex; i < startIndex + COMMENTS_PER_TIME; i++) {
-//       if (commentElements[i]) {
-//         const commentElement = commentElements[i];
-//         commentElement.classList.remove('hidden');
-//         visibleCommentsQuantity++;
-//       } else {
-//         break;
-//       }
-//     }
+const showComments = (commentElements, startIndex = visibleCommentsQuantity.getValue()) => {
+  if (commentElements) {
+    for (let i = startIndex; i < startIndex + COMMENTS_PER_TIME; i++) {
+      if (commentElements[i]) {
+        const commentElement = commentElements[i];
+        commentElement.classList.remove('hidden');
+        visibleCommentsQuantity.increase();
+      } else {
+        break;
+      }
+    }
 
-//     commentsCurrentQuantity.textContent = visibleCommentsQuantity;
+    commentsCurrentQuantity.textContent = visibleCommentsQuantity.getValue();
 
-//     if (visibleCommentsQuantity === commentElements.length) {
-//       commentsLoader.classList.add('hidden');
-//     }
-//   }
-// };
+    if (visibleCommentsQuantity.getValue() === commentElements.length) {
+      commentsLoader.classList.add('hidden');
+    }
+  }
+};
 
-// const getCommentsLoaderHandler = (commentElements) => {
-//   onCommentsLoaderClick = () => {
-//     showComments(commentElements);
-//   };
-//   return onCommentsLoaderClick;
-// };
+const getCommentsLoaderHandler = (commentElements) => {
+  onCommentsLoaderClick = () => {
+    showComments(commentElements);
+  };
+  return onCommentsLoaderClick;
+};
 
-// const openFullPhotoModal = ({url, likes = 0, comments = [], description = ''}) => {
-//   if (url) {
-//     fullPhotoImage.src = url;
-//     fullPhotoImage.alt = '';
-//     photoDescription.textContent = description;
-//     likesCount.textContent = likes;
-//     commentsQuantity.textContent = comments.length;
-//     commentsList.innerHTML = '';
+const openFullPhotoModal = ({url, likes = 0, comments = [], description = ''}) => {
+  if (url) {
+    fullPhotoImage.src = url;
+    fullPhotoImage.alt = '';
+    photoDescription.textContent = description;
+    likesCount.textContent = likes;
+    commentsQuantity.textContent = comments.length;
+    commentsList.innerHTML = '';
 
-//     visibleCommentsQuantity = 0;
-//     commentsLoader.classList.remove('hidden');
+    visibleCommentsQuantity.setValue(0);
+    commentsLoader.classList.remove('hidden');
 
-//     commentsList.append(getComments(comments));
-//     const commentElements = commentsList.querySelectorAll('.social__comment');
-//     showComments(commentElements);
+    commentsList.append(getComments(comments));
+    const commentElements = commentsList.querySelectorAll('.social__comment');
+    showComments(commentElements);
 
-//     commentsLoader.addEventListener('click', getCommentsLoaderHandler(commentElements));
-//     document.body.classList.add('modal-open');
-//     document.addEventListener('keydown', onEscKeydown, {once: true});
-//     fullPhoto.classList.remove('hidden');
-//   }
-// };
+    commentsLoader.addEventListener('click', getCommentsLoaderHandler(commentElements));
+    document.body.classList.add('modal-open');
+    document.addEventListener('keydown', onEscKeydown, {once: true});
+    fullPhoto.classList.remove('hidden');
+  }
+};
 
 
 closedButton.addEventListener('click', onClosedButtonClick);

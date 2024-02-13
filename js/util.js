@@ -53,19 +53,50 @@ function getState () {
 
 // Функция создания хранилища сообщения
 const createMessageStorage = (initText = '') => ({
-  state: initText,
+  messageText: initText,
   setMessageText,
   getMessageText,
 });
 
 function setMessageText (newText) {
   if (newText) {
-    this.state = newText;
+    this.messageText = newText;
   }
 }
 
 function getMessageText () {
-  return this.state;
+  return this.messageText;
 }
 
-export {getRandomInteger, getRandomArrayElement, createRandomUniqueIdGenerator, createNewElement, isEscapeKeydown, createStateStorage, createMessageStorage};
+// Функция создания счётчика
+const createCount = (initValue = 0) => ({
+  value: initValue,
+  increase,
+  decrease,
+  getValue,
+  setValue,
+});
+
+function increase () {
+  this.value++;
+}
+
+function decrease () {
+  this.value--;
+}
+
+function getValue () {
+  return this.value;
+}
+
+function setValue(newValue) {
+  const newIntValue = parseInt(newValue, 10);
+
+  if (((typeof newIntValue) !== 'number') || Number.isNaN(newIntValue)) {
+    return;
+  }
+
+  this.value = newIntValue;
+}
+
+export {getRandomInteger, getRandomArrayElement, createRandomUniqueIdGenerator, createNewElement, isEscapeKeydown, createStateStorage, createMessageStorage, createCount};
