@@ -34,4 +34,69 @@ const createNewElement = (tagName, className) => {
 
 const isEscapeKeydown = (evt) => evt.key === 'Escape';
 
-export {getRandomInteger, getRandomArrayElement, createRandomUniqueIdGenerator, createNewElement, isEscapeKeydown};
+// Функция создания хранилища состояния
+const createStateStorage = (initValue = false) => ({
+  state: initValue,
+  setState,
+  getState,
+});
+
+function setState (newValue) {
+  if (newValue !== undefined) {
+    this.state = newValue;
+  }
+}
+
+function getState () {
+  return this.state;
+}
+
+// Функция создания хранилища сообщения
+const createMessageStorage = (initText = '') => ({
+  messageText: initText,
+  setMessageText,
+  getMessageText,
+});
+
+function setMessageText (newText) {
+  if (newText) {
+    this.messageText = newText;
+  }
+}
+
+function getMessageText () {
+  return this.messageText;
+}
+
+// Функция создания счётчика
+const createCount = (initValue = 0) => ({
+  value: initValue,
+  increase,
+  decrease,
+  getValue,
+  setValue,
+});
+
+function increase () {
+  this.value++;
+}
+
+function decrease () {
+  this.value--;
+}
+
+function getValue () {
+  return this.value;
+}
+
+function setValue(newValue) {
+  const newIntValue = parseInt(newValue, 10);
+
+  if (((typeof newIntValue) !== 'number') || Number.isNaN(newIntValue)) {
+    return;
+  }
+
+  this.value = newIntValue;
+}
+
+export {getRandomInteger, getRandomArrayElement, createRandomUniqueIdGenerator, createNewElement, isEscapeKeydown, createStateStorage, createMessageStorage, createCount};
