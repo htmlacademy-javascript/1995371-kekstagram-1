@@ -2,7 +2,7 @@ import {isEscapeKeydown, createStateStorage, createMessageStorage} from './util.
 
 const HASHTAGS_MAX_QUANTITY = 5;
 const HASHTAG_MAX_LENGTH = 20;
-const REGEX = /\W|_/;
+const REGEX_NOT_ALPHANUMERIC = /[^a-zа-я0-9]/;
 
 const uploadForm = document.querySelector('#upload-select-image');
 const uploadImageButton = uploadForm.querySelector('#upload-file');
@@ -25,21 +25,13 @@ const hashtagFocusState = createStateStorage();
 const descriptionFocusState = createStateStorage();
 
 const isSharpFirst = (data) => !(data.find((element) => element[0] !== '#'));
-const isAlphanumericOnly = (data) => !(data.find((element) => element.slice(1).match(REGEX)));
+const isAlphanumericOnly = (data) => !(data.find((element) => element.slice(1).match(REGEX_NOT_ALPHANUMERIC)));
 const isNotSharpOnly = (data) => !(data.find((element) => element.length === 1));
 const isLengthWithinLimit = (data) => !(data.find((element) => element.length > HASHTAG_MAX_LENGTH));
 const isQuantityWithinLimit = (data) => data.length <= HASHTAGS_MAX_QUANTITY;
 const isContentUnique = (data) => {
-  for (let i = 0; i < data.length - 1; i++) {
-
-    for (let j = i + 1; j < data.length; j++) {
-      if (data[i] === data[j]) {
-        return false;
-      }
-    }
-  }
-
-  return true;
+  const uniqueElements = new Set(data);
+  return data.length === uniqueElements.size;
 };
 
 // Код показа формы
@@ -124,10 +116,11 @@ imageEditingModal.addEventListener('focusin', (evt) => {
   switch (evt.target) {
     case hashtagInput:
       hashtagFocusState.setState(true);
-      return;
+      break;
 
     case descriptionInput:
       descriptionFocusState.setState(true);
+      break;
   }
 });
 
@@ -135,10 +128,11 @@ imageEditingModal.addEventListener('focusout', (evt) => {
   switch (evt.target) {
     case hashtagInput:
       hashtagFocusState.setState(false);
-      return;
+      break;
 
     case descriptionInput:
       descriptionFocusState.setState(false);
+      break;
   }
 });
 
