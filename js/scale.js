@@ -9,7 +9,7 @@ const scaleSection = document.querySelector('.img-upload__scale');
 const decreaseButton = scaleSection.querySelector('.scale__control--smaller');
 const increaseButton = scaleSection.querySelector('.scale__control--bigger');
 const scaleField = scaleSection.querySelector('.scale__control--value');
-const preview = document.querySelector('.img-upload__preview');
+const preview = document.querySelector('.img-upload__preview img');
 
 const scaleImage = () => {
   preview.style.transform = `scale(${parseInt(scaleField.value, 10) / 100})`;
