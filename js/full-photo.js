@@ -1,4 +1,5 @@
 import {createNewElement, isEscapeKeydown, createCount} from './util.js';
+
 const COMMENTS_PER_TIME = 5;
 
 const fullPhoto = document.querySelector('.big-picture');

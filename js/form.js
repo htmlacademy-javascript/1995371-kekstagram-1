@@ -1,4 +1,5 @@
 import {isEscapeKeydown, createStateStorage, createMessageStorage} from './util.js';
+import {setScaleSection, clearScaleSection} from './scale.js';
 
 const HASHTAGS_MAX_QUANTITY = 5;
 const HASHTAG_MAX_LENGTH = 20;
@@ -40,6 +41,7 @@ const openImageEditingModal = () => {
   document.body.classList.add('modal-open');
   document.addEventListener('keydown', onEscKeydown);
   closeButton.addEventListener('click', onCloseButtonClick);
+  setScaleSection();
 };
 
 const onUploadImageButtonChange = () => {
@@ -52,6 +54,7 @@ const closeOpenImageEditingModal = () => {
   document.body.classList.remove('modal-open');
   document.removeEventListener('keydown', onEscKeydown);
   closeButton.removeEventListener('click', onCloseButtonClick);
+  clearScaleSection();
 };
 
 function onEscKeydown (evt) {
