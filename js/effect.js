@@ -67,7 +67,6 @@ const defaultSlider = {
       return parseFloat(value);
     },
   },
-  tooltips: true,
 };
 
 const uploadForm = document.querySelector('#upload-select-image');
