@@ -1,5 +1,6 @@
-import {isEscapeKeydown, createStateStorage, createMessageStorage} from './util.js';
-import {setScaleSection, clearScaleSection} from './scale.js';
+import {isEscapeKeydown, createStateStorage, createTextStorage} from './util.js';
+import {runScaleSection, stopScaleSection} from './scale.js';
+import {runEffects, stopEffects} from './effect.js';
 
 const HASHTAGS_MAX_QUANTITY = 5;
 const HASHTAG_MAX_LENGTH = 20;
@@ -21,7 +22,7 @@ const HashtagErrorMessage = {
   MAXQUANTITY: 'Укажите не более пяти хэш-тегов',
 };
 
-const hashtageErrorMessage = createMessageStorage();
+const hashtageErrorMessage = createTextStorage();
 const hashtagFocusState = createStateStorage();
 const descriptionFocusState = createStateStorage();
 
@@ -41,7 +42,8 @@ const openImageEditingModal = () => {
   document.body.classList.add('modal-open');
   document.addEventListener('keydown', onEscKeydown);
   closeButton.addEventListener('click', onCloseButtonClick);
-  setScaleSection();
+  runScaleSection();
+  runEffects();
 };
 
 const onUploadImageButtonChange = () => {
@@ -54,7 +56,8 @@ const closeOpenImageEditingModal = () => {
   document.body.classList.remove('modal-open');
   document.removeEventListener('keydown', onEscKeydown);
   closeButton.removeEventListener('click', onCloseButtonClick);
-  clearScaleSection();
+  stopScaleSection();
+  stopEffects();
 };
 
 function onEscKeydown (evt) {
@@ -83,27 +86,27 @@ const validateHashtags = (value) => {
 
   switch (false) {
     case isSharpFirst(hashtags):
-      hashtageErrorMessage.setMessageText(HashtagErrorMessage.NOT_SHARP_FIRST);
+      hashtageErrorMessage.setText(HashtagErrorMessage.NOT_SHARP_FIRST);
       return false;
 
     case isAlphanumericOnly(hashtags):
-      hashtageErrorMessage.setMessageText(HashtagErrorMessage.FORBIDDEN_SYMBOLS);
+      hashtageErrorMessage.setText(HashtagErrorMessage.FORBIDDEN_SYMBOLS);
       return false;
 
     case isNotSharpOnly(hashtags):
-      hashtageErrorMessage.setMessageText(HashtagErrorMessage.SHARP_ONLY);
+      hashtageErrorMessage.setText(HashtagErrorMessage.SHARP_ONLY);
       return false;
 
     case isLengthWithinLimit(hashtags):
-      hashtageErrorMessage.setMessageText(HashtagErrorMessage.MAXLENGTH);
+      hashtageErrorMessage.setText(HashtagErrorMessage.MAXLENGTH);
       return false;
 
     case isContentUnique(hashtags):
-      hashtageErrorMessage.setMessageText(HashtagErrorMessage.DOUBLE);
+      hashtageErrorMessage.setText(HashtagErrorMessage.DOUBLE);
       return false;
 
     case isQuantityWithinLimit(hashtags):
-      hashtageErrorMessage.setMessageText(HashtagErrorMessage.MAXQUANTITY);
+      hashtageErrorMessage.setText(HashtagErrorMessage.MAXQUANTITY);
       return false;
 
     default:
@@ -111,7 +114,7 @@ const validateHashtags = (value) => {
   }
 };
 
-const getHashtageErrorMessage = () => hashtageErrorMessage.getMessageText();
+const getHashtageErrorMessage = () => hashtageErrorMessage.getText();
 
 
 uploadImageButton.addEventListener('change', onUploadImageButtonChange);

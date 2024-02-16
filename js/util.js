@@ -52,20 +52,20 @@ function getState () {
 }
 
 // Функция создания хранилища сообщения
-const createMessageStorage = (initText = '') => ({
-  messageText: initText,
-  setMessageText,
-  getMessageText,
+const createTextStorage = (initText = '') => ({
+  text: initText,
+  setText,
+  getText,
 });
 
-function setMessageText (newText) {
-  if (newText) {
-    this.messageText = newText;
+function setText (newText) {
+  if (newText || newText === '') {
+    this.text = newText;
   }
 }
 
-function getMessageText () {
-  return this.messageText;
+function getText () {
+  return this.text;
 }
 
 // Функция создания счётчика
@@ -99,4 +99,4 @@ function setValue(newValue) {
   this.value = newIntValue;
 }
 
-export {getRandomInteger, getRandomArrayElement, createRandomUniqueIdGenerator, createNewElement, isEscapeKeydown, createStateStorage, createMessageStorage, createCount};
+export {getRandomInteger, getRandomArrayElement, createRandomUniqueIdGenerator, createNewElement, isEscapeKeydown, createStateStorage, createTextStorage, createCount};

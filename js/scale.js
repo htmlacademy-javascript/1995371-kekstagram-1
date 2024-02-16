@@ -30,8 +30,7 @@ const onScaleButtonClick = (evt) => {
   scaleImage();
 };
 
-
-const setScaleSection = () => {
+const runScaleSection = () => {
   decreaseButton.addEventListener('click', onScaleButtonClick);
   increaseButton.addEventListener('click', onScaleButtonClick);
   scaleImage();
@@ -42,10 +41,10 @@ const resetScale = () => {
   scaleImage();
 };
 
-const clearScaleSection = () => {
+const stopScaleSection = () => {
   decreaseButton.removeEventListener('click', onScaleButtonClick);
   increaseButton.removeEventListener('click', onScaleButtonClick);
   resetScale();
 };
 
-export {setScaleSection, resetScale, clearScaleSection};
+export {runScaleSection, resetScale, stopScaleSection};
