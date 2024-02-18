@@ -1,8 +1,10 @@
-import {isEscapeKeydown, createStateStorage, createMessageStorage} from './util.js';
+import {isEscapeKeydown, createStateStorage, createTextStorage} from './util.js';
+import {runScaleSection, stopScaleSection} from './scale.js';
+import {runEffects, stopEffects} from './effect.js';
 
 const HASHTAGS_MAX_QUANTITY = 5;
 const HASHTAG_MAX_LENGTH = 20;
-const REGEX = /\W|_/;
+const REGEX_NOT_ALPHANUMERIC = /[^a-zа-я0-9]/;
 
 const uploadForm = document.querySelector('#upload-select-image');
 const uploadImageButton = uploadForm.querySelector('#upload-file');
@@ -20,26 +22,18 @@ const HashtagErrorMessage = {
   MAXQUANTITY: 'Укажите не более пяти хэш-тегов',
 };
 
-const hashtageErrorMessage = createMessageStorage();
+const hashtageErrorMessage = createTextStorage();
 const hashtagFocusState = createStateStorage();
 const descriptionFocusState = createStateStorage();
 
 const isSharpFirst = (data) => !(data.find((element) => element[0] !== '#'));
-const isAlphanumericOnly = (data) => !(data.find((element) => element.slice(1).match(REGEX)));
+const isAlphanumericOnly = (data) => !(data.find((element) => element.slice(1).match(REGEX_NOT_ALPHANUMERIC)));
 const isNotSharpOnly = (data) => !(data.find((element) => element.length === 1));
 const isLengthWithinLimit = (data) => !(data.find((element) => element.length > HASHTAG_MAX_LENGTH));
 const isQuantityWithinLimit = (data) => data.length <= HASHTAGS_MAX_QUANTITY;
 const isContentUnique = (data) => {
-  for (let i = 0; i < data.length - 1; i++) {
-
-    for (let j = i + 1; j < data.length; j++) {
-      if (data[i] === data[j]) {
-        return false;
-      }
-    }
-  }
-
-  return true;
+  const uniqueElements = new Set(data);
+  return data.length === uniqueElements.size;
 };
 
 // Код показа формы
@@ -48,6 +42,8 @@ const openImageEditingModal = () => {
   document.body.classList.add('modal-open');
   document.addEventListener('keydown', onEscKeydown);
   closeButton.addEventListener('click', onCloseButtonClick);
+  runScaleSection();
+  runEffects();
 };
 
 const onUploadImageButtonChange = () => {
@@ -60,6 +56,8 @@ const closeOpenImageEditingModal = () => {
   document.body.classList.remove('modal-open');
   document.removeEventListener('keydown', onEscKeydown);
   closeButton.removeEventListener('click', onCloseButtonClick);
+  stopScaleSection();
+  stopEffects();
 };
 
 function onEscKeydown (evt) {
@@ -88,27 +86,27 @@ const validateHashtags = (value) => {
 
   switch (false) {
     case isSharpFirst(hashtags):
-      hashtageErrorMessage.setMessageText(HashtagErrorMessage.NOT_SHARP_FIRST);
+      hashtageErrorMessage.setText(HashtagErrorMessage.NOT_SHARP_FIRST);
       return false;
 
     case isAlphanumericOnly(hashtags):
-      hashtageErrorMessage.setMessageText(HashtagErrorMessage.FORBIDDEN_SYMBOLS);
+      hashtageErrorMessage.setText(HashtagErrorMessage.FORBIDDEN_SYMBOLS);
       return false;
 
     case isNotSharpOnly(hashtags):
-      hashtageErrorMessage.setMessageText(HashtagErrorMessage.SHARP_ONLY);
+      hashtageErrorMessage.setText(HashtagErrorMessage.SHARP_ONLY);
       return false;
 
     case isLengthWithinLimit(hashtags):
-      hashtageErrorMessage.setMessageText(HashtagErrorMessage.MAXLENGTH);
+      hashtageErrorMessage.setText(HashtagErrorMessage.MAXLENGTH);
       return false;
 
     case isContentUnique(hashtags):
-      hashtageErrorMessage.setMessageText(HashtagErrorMessage.DOUBLE);
+      hashtageErrorMessage.setText(HashtagErrorMessage.DOUBLE);
       return false;
 
     case isQuantityWithinLimit(hashtags):
-      hashtageErrorMessage.setMessageText(HashtagErrorMessage.MAXQUANTITY);
+      hashtageErrorMessage.setText(HashtagErrorMessage.MAXQUANTITY);
       return false;
 
     default:
@@ -116,7 +114,7 @@ const validateHashtags = (value) => {
   }
 };
 
-const getHashtageErrorMessage = () => hashtageErrorMessage.getMessageText();
+const getHashtageErrorMessage = () => hashtageErrorMessage.getText();
 
 
 uploadImageButton.addEventListener('change', onUploadImageButtonChange);
@@ -124,10 +122,11 @@ imageEditingModal.addEventListener('focusin', (evt) => {
   switch (evt.target) {
     case hashtagInput:
       hashtagFocusState.setState(true);
-      return;
+      break;
 
     case descriptionInput:
       descriptionFocusState.setState(true);
+      break;
   }
 });
 
@@ -135,10 +134,11 @@ imageEditingModal.addEventListener('focusout', (evt) => {
   switch (evt.target) {
     case hashtagInput:
       hashtagFocusState.setState(false);
-      return;
+      break;
 
     case descriptionInput:
       descriptionFocusState.setState(false);
+      break;
   }
 });
 
