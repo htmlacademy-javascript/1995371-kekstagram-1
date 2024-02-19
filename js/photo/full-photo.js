@@ -1,4 +1,4 @@
-import {createNewElement, isEscapeKeydown, createCount} from './util.js';
+import {createNewElement, isEscapeKeydown, createCount} from '../util.js';
 
 const COMMENTS_PER_TIME = 5;
 

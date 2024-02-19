@@ -1,5 +1,5 @@
-import {createPhotoPosts} from './data.js';
-import {renderThumbs} from './thumb.js';
-import './form.js';
+import {createPhotoPosts} from './mockup-data.js';
+import {renderThumbs} from './photo/thumb.js';
+import './upload-form/upload-form.js';
 
 renderThumbs(createPhotoPosts());

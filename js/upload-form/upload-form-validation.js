@@ -1,17 +1,11 @@
-import {isEscapeKeydown, createStateStorage, createTextStorage} from './util.js';
-import {runScaleSection, stopScaleSection} from './scale.js';
-import {runEffects, stopEffects} from './effect.js';
+import {createTextStorage} from '../util.js';
 
 const HASHTAGS_MAX_QUANTITY = 5;
 const HASHTAG_MAX_LENGTH = 20;
 const REGEX_NOT_ALPHANUMERIC = /[^a-zа-я0-9]/;
 
 const uploadForm = document.querySelector('#upload-select-image');
-const uploadImageButton = uploadForm.querySelector('#upload-file');
-const imageEditingModal = uploadForm.querySelector('.img-upload__overlay');
-const closeButton = imageEditingModal.querySelector('#upload-cancel');
-const hashtagInput = imageEditingModal.querySelector('.text__hashtags');
-const descriptionInput = imageEditingModal.querySelector('.text__description');
+const hashtagInput = uploadForm.querySelector('.text__hashtags');
 
 const HashtagErrorMessage = {
   NOT_SHARP_FIRST: 'Хэш-тег должен начинаться с символа # (решётка)',
@@ -23,8 +17,6 @@ const HashtagErrorMessage = {
 };
 
 const hashtageErrorMessage = createTextStorage();
-const hashtagFocusState = createStateStorage();
-const descriptionFocusState = createStateStorage();
 
 const isSharpFirst = (data) => !(data.find((element) => element[0] !== '#'));
 const isAlphanumericOnly = (data) => !(data.find((element) => element.slice(1).match(REGEX_NOT_ALPHANUMERIC)));
@@ -36,46 +28,6 @@ const isContentUnique = (data) => {
   return data.length === uniqueElements.size;
 };
 
-// Код показа формы
-const openImageEditingModal = () => {
-  imageEditingModal.classList.remove('hidden');
-  document.body.classList.add('modal-open');
-  document.addEventListener('keydown', onEscKeydown);
-  closeButton.addEventListener('click', onCloseButtonClick);
-  runScaleSection();
-  runEffects();
-};
-
-const onUploadImageButtonChange = () => {
-  openImageEditingModal();
-};
-
-// Код закрытия формы
-const closeOpenImageEditingModal = () => {
-  imageEditingModal.classList.add('hidden');
-  document.body.classList.remove('modal-open');
-  document.removeEventListener('keydown', onEscKeydown);
-  closeButton.removeEventListener('click', onCloseButtonClick);
-  stopScaleSection();
-  stopEffects();
-};
-
-function onEscKeydown (evt) {
-  if (isEscapeKeydown(evt)) {
-    evt.preventDefault();
-
-    if (!(hashtagFocusState.getState() || descriptionFocusState.getState())) {
-      closeOpenImageEditingModal();
-      uploadForm.reset();
-    }
-  }
-}
-
-function onCloseButtonClick () {
-  closeOpenImageEditingModal();
-}
-
-// Код валидации
 const pristine = new Pristine(uploadForm, {
   classTo: 'img-upload__field-wrapper',
   errorTextParent: 'img-upload__field-wrapper',
@@ -115,32 +67,8 @@ const validateHashtags = (value) => {
 };
 
 const getHashtageErrorMessage = () => hashtageErrorMessage.getText();
+const resetValidation = () => pristine.reset();
 
-
-uploadImageButton.addEventListener('change', onUploadImageButtonChange);
-imageEditingModal.addEventListener('focusin', (evt) => {
-  switch (evt.target) {
-    case hashtagInput:
-      hashtagFocusState.setState(true);
-      break;
-
-    case descriptionInput:
-      descriptionFocusState.setState(true);
-      break;
-  }
-});
-
-imageEditingModal.addEventListener('focusout', (evt) => {
-  switch (evt.target) {
-    case hashtagInput:
-      hashtagFocusState.setState(false);
-      break;
-
-    case descriptionInput:
-      descriptionFocusState.setState(false);
-      break;
-  }
-});
 
 pristine.addValidator(hashtagInput, validateHashtags, getHashtageErrorMessage);
 uploadForm.addEventListener('submit', (evt) => {
@@ -150,3 +78,5 @@ uploadForm.addEventListener('submit', (evt) => {
     evt.preventDefault();
   }
 });
+
+export {resetValidation};
