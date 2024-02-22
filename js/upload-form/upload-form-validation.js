@@ -31,6 +31,7 @@ const isContentUnique = (data) => {
 const pristine = new Pristine(uploadForm, {
   classTo: 'img-upload__field-wrapper',
   errorTextParent: 'img-upload__field-wrapper',
+  errorTextClass: 'img-upload__validation-error',
 });
 
 const validateHashtags = (value) => {

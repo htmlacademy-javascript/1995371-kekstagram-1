@@ -1408,3 +1408,23 @@ main {
 .hidden {
   display: none;
 }
+
+
+/* Стили для ошибки валидации
+   ========================================================================== */
+
+.img-upload__validation-error {
+  margin: 0 auto;
+  padding: 5px 5px 10px;
+  width: 450px;
+  display: flex;
+  justify-content: center;
+  font-size: 12px;
+  color: #fd4242;
+  border-radius: 5px;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.text__hashtags + .img-upload__validation-error {
+  margin: -20px auto 0;
+}
