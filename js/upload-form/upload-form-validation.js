@@ -1,4 +1,4 @@
-import {createTextStorage} from '../util.js';
+import { createTextStorage } from '../util.js';
 
 const HASHTAGS_MAX_QUANTITY = 5;
 const HASHTAG_MAX_LENGTH = 20;
@@ -72,12 +72,5 @@ const resetValidation = () => pristine.reset();
 
 
 pristine.addValidator(hashtagInput, validateHashtags, getHashtageErrorMessage);
-uploadForm.addEventListener('submit', (evt) => {
-  const valid = pristine.validate();
 
-  if (!valid) {
-    evt.preventDefault();
-  }
-});
-
-export {resetValidation};
+export { resetValidation, pristine };

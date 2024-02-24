@@ -1,4 +1,4 @@
-import {createNewElement, isEscapeKeydown, createCount} from '../util.js';
+import { createNewElement, isEscapeKeydown, createCount } from '../util.js';
 
 const COMMENTS_PER_TIME = 5;
 
@@ -230,4 +230,4 @@ const openFullPhotoModal = ({url, likes = 0, comments = [], description = ''}) =
 ========================================================*/
 closedButton.addEventListener('click', onClosedButtonClick);
 
-export {openFullPhotoModal};
+export { openFullPhotoModal };

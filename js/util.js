@@ -112,4 +112,4 @@ function setValue(newValue) {
   this.value = newIntValue;
 }
 
-export {getRandomInteger, roundToDecimalOrInteger, getFloat, getRandomArrayElement, isEscapeKeydown, createNewElement, createRandomUniqueIdGenerator, createStateStorage, createTextStorage, createCount};
+export { getRandomInteger, roundToDecimalOrInteger, getFloat, getRandomArrayElement, isEscapeKeydown, createNewElement, createRandomUniqueIdGenerator, createStateStorage, createTextStorage, createCount };

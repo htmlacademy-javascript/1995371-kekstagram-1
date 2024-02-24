@@ -1,23 +1,41 @@
-import {isEscapeKeydown, createStateStorage} from '../util.js';
-import {resetValidation} from './upload-form-validation.js';
-import {runScaleSection, stopScaleSection} from './scale.js';
-import {runEffects, stopEffects} from './effect.js';
+import { isEscapeKeydown, createStateStorage } from '../util.js';
+import { resetValidation, pristine } from './upload-form-validation.js';
+import { runScaleSection, stopScaleSection } from './scale.js';
+import { runEffects, stopEffects } from './effect.js';
+import { showSuccessModal, showErrorModal, messageState } from './message-modal.js';
+import { sendData } from '../api.js';
 
 const uploadForm = document.querySelector('#upload-select-image');
 const uploadImageButton = uploadForm.querySelector('#upload-file');
 const imageEditingModal = uploadForm.querySelector('.img-upload__overlay');
 const closeButton = imageEditingModal.querySelector('#upload-cancel');
+const submitButton = imageEditingModal.querySelector('.img-upload__submit');
 const hashtagInput = imageEditingModal.querySelector('.text__hashtags');
 const descriptionInput = imageEditingModal.querySelector('.text__description');
 
 const hashtagFocusState = createStateStorage();
 const descriptionFocusState = createStateStorage();
 
+const SubmitButtonText = {
+  DEFAULT: 'Опубликовать',
+  POSTING: 'Отправляю...',
+};
+
+const disableSubmitButton = () => {
+  submitButton.disabled = true;
+  submitButton.textContent = SubmitButtonText.POSTING;
+};
+
+const enableSubmitButton = () => {
+  submitButton.disabled = false;
+  submitButton.textContent = SubmitButtonText.DEFAULT;
+};
+
 // Код показа формы
 const openImageEditingModal = () => {
   imageEditingModal.classList.remove('hidden');
   document.body.classList.add('modal-open');
-  document.addEventListener('keydown', onEscKeydown);
+  document.addEventListener('keydown', onFormEscKeydown);
   closeButton.addEventListener('click', onCloseButtonClick);
   runScaleSection();
   runEffects();
@@ -31,20 +49,20 @@ const onUploadImageButtonChange = () => {
 const closeOpenImageEditingModal = () => {
   imageEditingModal.classList.add('hidden');
   document.body.classList.remove('modal-open');
-  document.removeEventListener('keydown', onEscKeydown);
+  document.removeEventListener('keydown', onFormEscKeydown);
   closeButton.removeEventListener('click', onCloseButtonClick);
   stopScaleSection();
   stopEffects();
   resetValidation();
+  uploadForm.reset();
 };
 
-function onEscKeydown (evt) {
+function onFormEscKeydown (evt) {
   if (isEscapeKeydown(evt)) {
     evt.preventDefault();
 
-    if (!(hashtagFocusState.getState() || descriptionFocusState.getState())) {
+    if (!(hashtagFocusState.getState() || descriptionFocusState.getState()) && !messageState.getState()) {
       closeOpenImageEditingModal();
-      uploadForm.reset();
     }
   }
 }
@@ -77,4 +95,24 @@ imageEditingModal.addEventListener('focusout', (evt) => {
       descriptionFocusState.setState(false);
       break;
   }
+});
+
+
+uploadForm.addEventListener('submit', (evt) => {
+  evt.preventDefault();
+  const valid = pristine.validate();
+  disableSubmitButton();
+
+  if (!valid) {
+    enableSubmitButton();
+    return;
+  }
+
+  const formData = new FormData(evt.target);
+
+  sendData(formData)
+    .then(showSuccessModal(closeOpenImageEditingModal))
+    .catch(showErrorModal())
+    .finally(enableSubmitButton);
+
 });

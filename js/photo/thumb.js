@@ -1,4 +1,4 @@
-import {openFullPhotoModal} from './full-photo.js';
+import { openFullPhotoModal } from './full-photo.js';
 
 const thumbTemplate = document.querySelector('#picture').content.querySelector('.picture');
 const thumbsContainer = document.querySelector('.pictures');
@@ -18,4 +18,4 @@ const renderThumbs = (photoData) => {
   }
 };
 
-export {renderThumbs};
+export { renderThumbs };

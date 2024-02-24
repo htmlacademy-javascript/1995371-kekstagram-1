@@ -1,4 +1,4 @@
-import {createTextStorage, roundToDecimalOrInteger, getFloat} from '../util.js';
+import { createTextStorage, roundToDecimalOrInteger, getFloat } from '../util.js';
 
 const effect = {
   'chrome': {
@@ -147,4 +147,4 @@ const stopEffects = () => {
 
 noUiSlider.create(effectLevelSlider, defaultSlider);
 
-export {runEffects, stopEffects};
+export { runEffects, stopEffects };

@@ -1410,7 +1410,7 @@ main {
 }
 
 
-/* Стили для ошибки валидации
+/* Стили сообщений об ошибках
    ========================================================================== */
 
 .img-upload__validation-error {
@@ -1427,4 +1427,16 @@ main {
 
 .text__hashtags + .img-upload__validation-error {
   margin: -20px auto 0;
+}
+
+.download-error {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  z-index: 2;
+  background-color: #fd4242;
 }
