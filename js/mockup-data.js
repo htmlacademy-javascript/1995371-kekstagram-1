@@ -1,4 +1,4 @@
-import {getRandomInteger, getRandomArrayElement, createRandomUniqueIdGenerator} from './util.js';
+import { getRandomInteger, getRandomArrayElement, createRandomUniqueIdGenerator } from './util.js';
 
 const PHOTO_POSTS_QUANTITY = 25;
 const COMMENTS_QUANTITY = 13;
@@ -63,4 +63,4 @@ const createPhotoPost = (id) => ({
 
 const createPhotoPosts = () => Array.from({length: PHOTO_POSTS_QUANTITY}, (_, index) => createPhotoPost(index + 1));
 
-export {createPhotoPosts};
+export { createPhotoPosts };

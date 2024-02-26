@@ -47,4 +47,4 @@ const stopScaleSection = () => {
   resetScale();
 };
 
-export {runScaleSection, resetScale, stopScaleSection};
+export { runScaleSection, resetScale, stopScaleSection };

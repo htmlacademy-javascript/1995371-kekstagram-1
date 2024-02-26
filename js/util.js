@@ -1,11 +1,33 @@
+// Математические операции
 const getRandomInteger = (a, b) => {
   const min = Math.ceil(Math.min(a, b));
   const max = Math.floor(Math.max(a, b));
   return Math.floor(Math.random() * (max - min + 1) + min);
 };
 
+const roundToDecimalOrInteger = (value) => {
+  if (Number.isInteger(value)) {
+    return value.toFixed(0);
+  }
+  return value.toFixed(1);
+};
+
+const getFloat = (value) => parseFloat(value);
+
+// Получить случайный элемент массива
 const getRandomArrayElement = (array) => array[getRandomInteger(0, array.length - 1)];
 
+// Проверки
+const isEscapeKeydown = (evt) => evt.key === 'Escape';
+
+// Функция создания DOM-элемента с классом
+const createNewElement = (tagName, className) => {
+  const newElement = document.createElement(tagName);
+  newElement.classList.add(className);
+  return newElement;
+};
+
+// Функция создания генератора случайного уникального числа из диапазона
 const createRandomUniqueIdGenerator = (min, max) => {
   const idValues = [];
   return () => {
@@ -24,15 +46,6 @@ const createRandomUniqueIdGenerator = (min, max) => {
     return newId;
   };
 };
-
-
-const createNewElement = (tagName, className) => {
-  const newElement = document.createElement(tagName);
-  newElement.classList.add(className);
-  return newElement;
-};
-
-const isEscapeKeydown = (evt) => evt.key === 'Escape';
 
 // Функция создания хранилища состояния
 const createStateStorage = (initValue = false) => ({
@@ -99,4 +112,4 @@ function setValue(newValue) {
   this.value = newIntValue;
 }
 
-export {getRandomInteger, getRandomArrayElement, createRandomUniqueIdGenerator, createNewElement, isEscapeKeydown, createStateStorage, createTextStorage, createCount};
+export { getRandomInteger, roundToDecimalOrInteger, getFloat, getRandomArrayElement, isEscapeKeydown, createNewElement, createRandomUniqueIdGenerator, createStateStorage, createTextStorage, createCount };

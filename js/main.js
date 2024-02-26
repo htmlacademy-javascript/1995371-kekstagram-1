@@ -1,5 +1,12 @@
-import {createPhotoPosts} from './data.js';
-import {renderThumbs} from './thumb.js';
-import './form.js';
+import './upload-form/upload-form.js';
+import { getData } from './api.js';
+import { renderThumbs } from './photo/thumb.js';
+import { showAlert } from './alert.js';
 
-renderThumbs(createPhotoPosts());
+const ALERT_SHOW_TIME = 5000;
+
+getData()
+  .then((photoData) => renderThumbs(photoData))
+  .catch((error) => {
+    showAlert(error.message, ALERT_SHOW_TIME);
+  });
