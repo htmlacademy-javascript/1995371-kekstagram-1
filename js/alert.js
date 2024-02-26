@@ -4,14 +4,15 @@ const ERROR_DEFAULT_TEXT = 'Ошибка загрузки. Попробуйте 
 const ALERT_DEFAULT_SHOW_TIME = 5000;
 
 const showAlert = (errorText = ERROR_DEFAULT_TEXT, showTime = ALERT_DEFAULT_SHOW_TIME) => {
+  const body = document.body;
   const errorElement = createNewElement('div', 'download-error');
   const errorMessage = createNewElement('p', 'download-error__text');
-  errorMessage.textContent = errorText;
 
+  errorMessage.textContent = errorText;
   errorElement.append(errorMessage);
-  document.body.prepend(errorElement);
+  body.append(errorElement);
   setTimeout(() => {
-    document.body.removeChild(errorElement);
+    body.removeChild(errorElement);
   }, showTime);
 };
 
