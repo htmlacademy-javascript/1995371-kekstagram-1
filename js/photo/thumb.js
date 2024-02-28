@@ -19,7 +19,7 @@ const renderThumbs = (photoData) => {
 };
 
 const clearThumbs = () => {
-  thumbsContainer.innerHTML = '';
+  thumbsContainer.querySelectorAll('a.picture').forEach((element) => thumbsContainer.removeChild(element));
 };
 
 export { renderThumbs, clearThumbs };
