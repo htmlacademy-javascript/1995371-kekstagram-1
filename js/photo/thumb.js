@@ -18,4 +18,8 @@ const renderThumbs = (photoData) => {
   }
 };
 
-export { renderThumbs };
+const clearThumbs = () => {
+  thumbsContainer.innerHTML = '';
+};
+
+export { renderThumbs, clearThumbs };

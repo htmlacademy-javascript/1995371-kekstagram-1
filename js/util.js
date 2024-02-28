@@ -17,6 +17,14 @@ const getFloat = (value) => parseFloat(value);
 // Получить случайный элемент массива
 const getRandomArrayElement = (array) => array[getRandomInteger(0, array.length - 1)];
 
+// Перемешать массив
+const shuffleArray = (array) => {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = getRandomInteger(0, i);
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+};
+
 // Проверки
 const isEscapeKeydown = (evt) => evt.key === 'Escape';
 
@@ -135,4 +143,4 @@ const throttle = (callback, delayBetweenFrames) => {
   };
 };
 
-export { getRandomInteger, roundToDecimalOrInteger, getFloat, getRandomArrayElement, isEscapeKeydown, createNewElement, createRandomUniqueIdGenerator, createStateStorage, createTextStorage, createCount, debounce, throttle };
+export { getRandomInteger, roundToDecimalOrInteger, getFloat, getRandomArrayElement, shuffleArray, isEscapeKeydown, createNewElement, createRandomUniqueIdGenerator, createStateStorage, createTextStorage, createCount, debounce, throttle };
