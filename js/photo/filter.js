@@ -1,5 +1,5 @@
 import { shuffleArray } from '../util.js';
-import { renderThumbs, clearThumbs } from './thumb';
+import { renderThumbs, clearThumbs } from './thumb.js';
 
 const RANDOM_PHOTO_QUANTITY = 10;
 const FILTERS_CONTAINER_HIDING_CLASS = 'img-filters--inactive';
