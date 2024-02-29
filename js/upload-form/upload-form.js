@@ -4,9 +4,11 @@ import { runScaleSection, stopScaleSection } from './scale.js';
 import { runEffects, stopEffects } from './effect.js';
 import { showSuccessModal, showErrorModal, messageState } from './message-modal.js';
 import { sendData } from '../api.js';
+import { updatePreview } from './preview.js';
 
 const uploadForm = document.querySelector('#upload-select-image');
 const uploadImageButton = uploadForm.querySelector('#upload-file');
+const preview = uploadForm.querySelector('.img-upload__preview img');
 const imageEditingModal = uploadForm.querySelector('.img-upload__overlay');
 const closeButton = imageEditingModal.querySelector('#upload-cancel');
 const submitButton = imageEditingModal.querySelector('.img-upload__submit');
@@ -53,7 +55,8 @@ const enableSubmitButton = () => {
   submitButton.textContent = SubmitButtonText.DEFAULT;
 };
 
-const onUploadImageButtonChange = () => {
+const onUploadImageButtonChange = (evt) => {
+  updatePreview(evt.target, preview);
   openImageEditingModal();
 };
 
