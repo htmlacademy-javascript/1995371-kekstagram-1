@@ -13,14 +13,7 @@ const discussedFilterButton = filterContainer.querySelector('#filter-discussed')
 
 let currentFilter = defaultFilterButton;
 
-const sortByCommentsQuantity = (a, b) => {
-  if (a.comments.length < b.comments.length) {
-    return 1;
-  } else if (a.comments.length > b.comments.length) {
-    return -1;
-  }
-  return 0;
-};
+const sortByCommentsQuantity = (a, b) => b.comments.length - a.comments.length;
 
 const rerenderThumbs = debounce((data) => {
   clearThumbs();
