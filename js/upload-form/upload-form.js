@@ -13,23 +13,13 @@ const submitButton = imageEditingModal.querySelector('.img-upload__submit');
 const hashtagInput = imageEditingModal.querySelector('.text__hashtags');
 const descriptionInput = imageEditingModal.querySelector('.text__description');
 
-const hashtagFocusState = createStateStorage();
-const descriptionFocusState = createStateStorage();
-
 const SubmitButtonText = {
   DEFAULT: 'Опубликовать',
   POSTING: 'Отправляю...',
 };
 
-const disableSubmitButton = () => {
-  submitButton.disabled = true;
-  submitButton.textContent = SubmitButtonText.POSTING;
-};
-
-const enableSubmitButton = () => {
-  submitButton.disabled = false;
-  submitButton.textContent = SubmitButtonText.DEFAULT;
-};
+const hashtagFocusState = createStateStorage();
+const descriptionFocusState = createStateStorage();
 
 // Код показа формы
 const openImageEditingModal = () => {
@@ -39,10 +29,6 @@ const openImageEditingModal = () => {
   closeButton.addEventListener('click', onCloseButtonClick);
   runScaleSection();
   runEffects();
-};
-
-const onUploadImageButtonChange = () => {
-  openImageEditingModal();
 };
 
 // Код закрытия формы
@@ -55,6 +41,20 @@ const closeOpenImageEditingModal = () => {
   stopEffects();
   resetValidation();
   uploadForm.reset();
+};
+
+const disableSubmitButton = () => {
+  submitButton.disabled = true;
+  submitButton.textContent = SubmitButtonText.POSTING;
+};
+
+const enableSubmitButton = () => {
+  submitButton.disabled = false;
+  submitButton.textContent = SubmitButtonText.DEFAULT;
+};
+
+const onUploadImageButtonChange = () => {
+  openImageEditingModal();
 };
 
 function onFormEscKeydown (evt) {
@@ -71,9 +71,7 @@ function onCloseButtonClick () {
   closeOpenImageEditingModal();
 }
 
-
-uploadImageButton.addEventListener('change', onUploadImageButtonChange);
-imageEditingModal.addEventListener('focusin', (evt) => {
+const onEditingModalFocusin = (evt) => {
   switch (evt.target) {
     case hashtagInput:
       hashtagFocusState.setState(true);
@@ -83,9 +81,9 @@ imageEditingModal.addEventListener('focusin', (evt) => {
       descriptionFocusState.setState(true);
       break;
   }
-});
+};
 
-imageEditingModal.addEventListener('focusout', (evt) => {
+const onEditingModalFocusout = (evt) => {
   switch (evt.target) {
     case hashtagInput:
       hashtagFocusState.setState(false);
@@ -95,10 +93,9 @@ imageEditingModal.addEventListener('focusout', (evt) => {
       descriptionFocusState.setState(false);
       break;
   }
-});
+};
 
-
-uploadForm.addEventListener('submit', (evt) => {
+const onUploadFormSubmit = (evt) => {
   evt.preventDefault();
   const valid = pristine.validate();
   disableSubmitButton();
@@ -114,5 +111,9 @@ uploadForm.addEventListener('submit', (evt) => {
     .then(showSuccessModal(closeOpenImageEditingModal))
     .catch(showErrorModal())
     .finally(enableSubmitButton);
+};
 
-});
+uploadImageButton.addEventListener('change', onUploadImageButtonChange);
+imageEditingModal.addEventListener('focusin', onEditingModalFocusin);
+imageEditingModal.addEventListener('focusout', onEditingModalFocusout);
+uploadForm.addEventListener('submit', onUploadFormSubmit);

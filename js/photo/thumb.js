@@ -18,4 +18,8 @@ const renderThumbs = (photoData) => {
   }
 };
 
-export { renderThumbs };
+const clearThumbs = () => {
+  thumbsContainer.querySelectorAll('a.picture').forEach((element) => thumbsContainer.removeChild(element));
+};
+
+export { renderThumbs, clearThumbs };

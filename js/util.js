@@ -17,6 +17,14 @@ const getFloat = (value) => parseFloat(value);
 // Получить случайный элемент массива
 const getRandomArrayElement = (array) => array[getRandomInteger(0, array.length - 1)];
 
+// Перемешать массив
+const shuffleArray = (array) => {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = getRandomInteger(0, i);
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+};
+
 // Проверки
 const isEscapeKeydown = (evt) => evt.key === 'Escape';
 
@@ -112,4 +120,27 @@ function setValue(newValue) {
   this.value = newIntValue;
 }
 
-export { getRandomInteger, roundToDecimalOrInteger, getFloat, getRandomArrayElement, isEscapeKeydown, createNewElement, createRandomUniqueIdGenerator, createStateStorage, createTextStorage, createCount };
+// Оптимизация
+
+const debounce = (callback, timeoutDelay = 500) => {
+  let timeoutId;
+
+  return (...rest) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
+  };
+};
+
+const throttle = (callback, delayBetweenFrames) => {
+  let lastTime = 0;
+
+  return (...rest) => {
+    const now = new Date();
+    if (now - lastTime >= delayBetweenFrames) {
+      callback.apply(this, rest);
+      lastTime = now;
+    }
+  };
+};
+
+export { getRandomInteger, roundToDecimalOrInteger, getFloat, getRandomArrayElement, shuffleArray, isEscapeKeydown, createNewElement, createRandomUniqueIdGenerator, createStateStorage, createTextStorage, createCount, debounce, throttle };

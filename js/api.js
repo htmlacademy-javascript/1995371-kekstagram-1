@@ -17,7 +17,7 @@ const ErrorText = {
 const load = (route, errorText, method = Method.GET, body = null) =>
   fetch(`${Route['BASE']}${route}`, {method, body})
     .then((response) => {
-      if(response.ok) {
+      if (response.ok) {
         return response;
       }
 
