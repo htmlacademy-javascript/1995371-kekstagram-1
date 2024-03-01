@@ -1,4 +1,4 @@
-import { shuffleArray, debounce } from '../util.js';
+import { shuffleArray, moveSomeClassName, debounce } from '../util.js';
 import { renderThumbs, clearThumbs } from './thumb.js';
 
 const RANDOM_PHOTO_QUANTITY = 10;
@@ -15,6 +15,15 @@ let currentFilter = defaultFilterButton;
 
 const sortByCommentsQuantity = (a, b) => b.comments.length - a.comments.length;
 
+const updateCurrentFilter = (newElement) => {
+  if (!newElement) {
+    return;
+  }
+
+  moveSomeClassName(currentFilter, newElement, CURRENT_FILTER_CLASS);
+  currentFilter = newElement;
+};
+
 const rerenderThumbs = debounce((data) => {
   clearThumbs();
   renderThumbs(data);
@@ -27,9 +36,7 @@ const onDefaultFilterButtonClick = (photoData, cb) => () => {
     return;
   }
 
-  currentFilter.classList.remove(CURRENT_FILTER_CLASS);
-  currentFilter = defaultFilterButton;
-  currentFilter.classList.add(CURRENT_FILTER_CLASS);
+  updateCurrentFilter(defaultFilterButton);
 };
 
 const onRandomFilterButtonClick = (photoData, cb) => () => {
@@ -42,9 +49,7 @@ const onRandomFilterButtonClick = (photoData, cb) => () => {
     return;
   }
 
-  currentFilter.classList.remove(CURRENT_FILTER_CLASS);
-  currentFilter = randomFilterButton;
-  currentFilter.classList.add(CURRENT_FILTER_CLASS);
+  updateCurrentFilter(randomFilterButton);
 };
 
 const onDiscussedFilterButtonClick = (photoData, cb) => () => {
@@ -56,9 +61,7 @@ const onDiscussedFilterButtonClick = (photoData, cb) => () => {
     return;
   }
 
-  currentFilter.classList.remove(CURRENT_FILTER_CLASS);
-  currentFilter = discussedFilterButton;
-  currentFilter.classList.add(CURRENT_FILTER_CLASS);
+  updateCurrentFilter(discussedFilterButton);
 };
 
 const setFilters = (photoData) => {
