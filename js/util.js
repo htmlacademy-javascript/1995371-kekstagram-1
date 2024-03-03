@@ -35,6 +35,14 @@ const createNewElement = (tagName, className) => {
   return newElement;
 };
 
+// Функция перемешения класса между элементами
+const moveSomeClassName = (currentElement, newElement, className) => {
+  if (currentElement && newElement && className) {
+    currentElement.classList.remove(className);
+    newElement.classList.add(className);
+  }
+};
+
 // Функция создания генератора случайного уникального числа из диапазона
 const createRandomUniqueIdGenerator = (min, max) => {
   const idValues = [];
@@ -143,4 +151,19 @@ const throttle = (callback, delayBetweenFrames) => {
   };
 };
 
-export { getRandomInteger, roundToDecimalOrInteger, getFloat, getRandomArrayElement, shuffleArray, isEscapeKeydown, createNewElement, createRandomUniqueIdGenerator, createStateStorage, createTextStorage, createCount, debounce, throttle };
+export {
+  getRandomInteger,
+  roundToDecimalOrInteger,
+  getFloat,
+  getRandomArrayElement,
+  shuffleArray,
+  isEscapeKeydown,
+  createNewElement,
+  moveSomeClassName,
+  createRandomUniqueIdGenerator,
+  createStateStorage,
+  createTextStorage,
+  createCount,
+  debounce,
+  throttle
+};
