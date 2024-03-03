@@ -14,9 +14,6 @@ const roundToDecimalOrInteger = (value) => {
 
 const getFloat = (value) => parseFloat(value);
 
-// Получить случайный элемент массива
-const getRandomArrayElement = (array) => array[getRandomInteger(0, array.length - 1)];
-
 // Перемешать массив
 const shuffleArray = (array) => {
   for (let i = array.length - 1; i > 0; i--) {
@@ -41,26 +38,6 @@ const moveSomeClassName = (currentElement, newElement, className) => {
     currentElement.classList.remove(className);
     newElement.classList.add(className);
   }
-};
-
-// Функция создания генератора случайного уникального числа из диапазона
-const createRandomUniqueIdGenerator = (min, max) => {
-  const idValues = [];
-  return () => {
-
-    if (idValues.length >= (max - min + 1)) {
-      return null;
-    }
-
-    let newId = getRandomInteger(min, max);
-
-    while (idValues.includes(newId)) {
-      newId = getRandomInteger(min, max);
-    }
-
-    idValues.push(newId);
-    return newId;
-  };
 };
 
 // Функция создания хранилища состояния
@@ -139,31 +116,16 @@ const debounce = (callback, timeoutDelay = 500) => {
   };
 };
 
-const throttle = (callback, delayBetweenFrames) => {
-  let lastTime = 0;
-
-  return (...rest) => {
-    const now = new Date();
-    if (now - lastTime >= delayBetweenFrames) {
-      callback.apply(this, rest);
-      lastTime = now;
-    }
-  };
-};
-
 export {
   getRandomInteger,
   roundToDecimalOrInteger,
   getFloat,
-  getRandomArrayElement,
   shuffleArray,
   isEscapeKeydown,
   createNewElement,
   moveSomeClassName,
-  createRandomUniqueIdGenerator,
   createStateStorage,
   createTextStorage,
   createCount,
   debounce,
-  throttle
 };
