@@ -2,6 +2,7 @@
 const getRandomInteger = (a, b) => {
   const min = Math.ceil(Math.min(a, b));
   const max = Math.floor(Math.max(a, b));
+
   return Math.floor(Math.random() * (max - min + 1) + min);
 };
 
@@ -9,13 +10,11 @@ const roundToDecimalOrInteger = (value) => {
   if (Number.isInteger(value)) {
     return value.toFixed(0);
   }
+
   return value.toFixed(1);
 };
 
 const getFloat = (value) => parseFloat(value);
-
-// Получить случайный элемент массива
-const getRandomArrayElement = (array) => array[getRandomInteger(0, array.length - 1)];
 
 // Перемешать массив
 const shuffleArray = (array) => {
@@ -31,6 +30,7 @@ const isEscapeKeydown = (evt) => evt.key === 'Escape';
 // Функция создания DOM-элемента с классом
 const createNewElement = (tagName, className) => {
   const newElement = document.createElement(tagName);
+
   newElement.classList.add(className);
   return newElement;
 };
@@ -41,26 +41,6 @@ const moveSomeClassName = (currentElement, newElement, className) => {
     currentElement.classList.remove(className);
     newElement.classList.add(className);
   }
-};
-
-// Функция создания генератора случайного уникального числа из диапазона
-const createRandomUniqueIdGenerator = (min, max) => {
-  const idValues = [];
-  return () => {
-
-    if (idValues.length >= (max - min + 1)) {
-      return null;
-    }
-
-    let newId = getRandomInteger(min, max);
-
-    while (idValues.includes(newId)) {
-      newId = getRandomInteger(min, max);
-    }
-
-    idValues.push(newId);
-    return newId;
-  };
 };
 
 // Функция создания хранилища состояния
@@ -129,7 +109,6 @@ function setValue(newValue) {
 }
 
 // Оптимизация
-
 const debounce = (callback, timeoutDelay = 500) => {
   let timeoutId;
 
@@ -139,31 +118,16 @@ const debounce = (callback, timeoutDelay = 500) => {
   };
 };
 
-const throttle = (callback, delayBetweenFrames) => {
-  let lastTime = 0;
-
-  return (...rest) => {
-    const now = new Date();
-    if (now - lastTime >= delayBetweenFrames) {
-      callback.apply(this, rest);
-      lastTime = now;
-    }
-  };
-};
-
 export {
   getRandomInteger,
   roundToDecimalOrInteger,
   getFloat,
-  getRandomArrayElement,
   shuffleArray,
   isEscapeKeydown,
   createNewElement,
   moveSomeClassName,
-  createRandomUniqueIdGenerator,
   createStateStorage,
   createTextStorage,
   createCount,
   debounce,
-  throttle
 };

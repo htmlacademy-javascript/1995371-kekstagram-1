@@ -5,45 +5,46 @@ const ScaleValue = {
   MAX: 100,
 };
 
-const scaleSection = document.querySelector('.img-upload__scale');
-const decreaseButton = scaleSection.querySelector('.scale__control--smaller');
-const increaseButton = scaleSection.querySelector('.scale__control--bigger');
-const scaleField = scaleSection.querySelector('.scale__control--value');
-const preview = document.querySelector('.img-upload__preview img');
+const scaleSectionElement = document.querySelector('.img-upload__scale');
+const decreaseButtonElement = scaleSectionElement.querySelector('.scale__control--smaller');
+const increaseButtonElement = scaleSectionElement.querySelector('.scale__control--bigger');
+const scaleFieldElement = scaleSectionElement.querySelector('.scale__control--value');
+const previewElement = document.querySelector('.img-upload__preview img');
 
 const scaleImage = () => {
-  preview.style.transform = `scale(${parseInt(scaleField.value, 10) / 100})`;
+  previewElement.style.transform = `scale(${parseInt(scaleFieldElement.value, 10) / 100})`;
 };
 
 const onScaleButtonClick = (evt) => {
-  const currentValue = parseInt(scaleField.value, 10);
+  const currentValue = parseInt(scaleFieldElement.value, 10);
   let newValue = currentValue;
 
-  if (evt.target === decreaseButton) {
+  if (evt.target === decreaseButtonElement) {
     newValue = (currentValue - SCALE_STEP < ScaleValue.MIN) ? ScaleValue.MIN : currentValue - SCALE_STEP;
   }
 
-  if (evt.target === increaseButton) {
+  if (evt.target === increaseButtonElement) {
     newValue = (currentValue + SCALE_STEP > ScaleValue.MAX) ? ScaleValue.MAX : currentValue + SCALE_STEP;
   }
-  scaleField.value = `${newValue}%`;
+
+  scaleFieldElement.value = `${newValue}%`;
   scaleImage();
 };
 
 const runScaleSection = () => {
-  decreaseButton.addEventListener('click', onScaleButtonClick);
-  increaseButton.addEventListener('click', onScaleButtonClick);
+  decreaseButtonElement.addEventListener('click', onScaleButtonClick);
+  increaseButtonElement.addEventListener('click', onScaleButtonClick);
   scaleImage();
 };
 
 const resetScale = () => {
-  scaleField.value = scaleField.defaultValue;
+  scaleFieldElement.value = scaleFieldElement.defaultValue;
   scaleImage();
 };
 
 const stopScaleSection = () => {
-  decreaseButton.removeEventListener('click', onScaleButtonClick);
-  increaseButton.removeEventListener('click', onScaleButtonClick);
+  decreaseButtonElement.removeEventListener('click', onScaleButtonClick);
+  increaseButtonElement.removeEventListener('click', onScaleButtonClick);
   resetScale();
 };
 

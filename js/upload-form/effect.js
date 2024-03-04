@@ -1,42 +1,44 @@
 import { createTextStorage, roundToDecimalOrInteger, getFloat } from '../util.js';
 
-const effect = {
-  'chrome': {
+const DEFAULT_EFFECT_PREVIEW_CLASSNAME = 'effects__preview--none';
+
+const Effect = {
+  CHROME: {
     filterType: 'grayscale',
     min: 0,
     max: 1,
     step: 0.1,
     unit: '',
   },
-  'sepia': {
+  SEPIA: {
     filterType: 'sepia',
     min: 0,
     max: 1,
     step: 0.1,
     unit: '',
   },
-  'marvin': {
+  MARVIN: {
     filterType: 'invert',
     min: 0,
     max: 100,
     step: 1,
     unit: '%',
   },
-  'phobos': {
+  PHOBOS: {
     filterType: 'blur',
     min: 0,
     max: 3,
     step: 0.1,
     unit: 'px',
   },
-  'heat': {
+  HEAT: {
     filterType: 'brightness',
     min: 1,
     max: 3,
     step: 0.1,
     unit: '',
   },
-  'default': {
+  DEFAULT: {
     filterType: 'none',
     min: 0,
     max: 100,
@@ -45,35 +47,36 @@ const effect = {
   }
 };
 
-const currentEffectName = createTextStorage('default');
-const currentEffectClass = createTextStorage();
+const currentEffectName = createTextStorage('DEFAULT');
+const currentEffectClassName = createTextStorage();
 
 const defaultSlider = {
-  start: effect['default'].max,
+  start: Effect['DEFAULT'].max,
   connect: 'lower',
   range: {
-    'min': effect['default'].min,
-    'max': effect['default'].max,
+    'min': Effect['DEFAULT'].min,
+    'max': Effect['DEFAULT'].max,
   },
-  step: effect['default'].step,
+  step: Effect['DEFAULT'].step,
   format: {
     to: roundToDecimalOrInteger,
     from: getFloat,
   },
 };
 
-const uploadForm = document.querySelector('#upload-select-image');
-const effectLevelContainer = uploadForm.querySelector('.img-upload__effect-level');
-const effectLevelSlider = effectLevelContainer.querySelector('.effect-level__slider');
-const effectLevelField = effectLevelContainer.querySelector('.effect-level__value');
-const preview = uploadForm.querySelector('.img-upload__preview img');
-const effectsList = uploadForm.querySelector('.effects__list');
-const defaultEffectElement = effectsList.querySelector('.effects__radio[value=none]');
+const uploadFormElement = document.querySelector('#upload-select-image');
+const effectLevelContainerElement = uploadFormElement.querySelector('.img-upload__effect-level');
+const effectLevelSliderElement = effectLevelContainerElement.querySelector('.effect-level__slider');
+const effectLevelFieldElement = effectLevelContainerElement.querySelector('.effect-level__value');
+const previewElement = uploadFormElement.querySelector('.img-upload__preview img');
+const effectsListElement = uploadFormElement.querySelector('.effects__list');
+const defaultEffectElementElement = effectsListElement.querySelector('.effects__radio[value=none]');
 
 const updateSlider = (newOptionsObject) => {
   if (newOptionsObject) {
     const {max, min, step} = newOptionsObject;
-    effectLevelSlider.noUiSlider.updateOptions({
+
+    effectLevelSliderElement.noUiSlider.updateOptions({
       start: max,
       range: {
         'min': min,
@@ -85,66 +88,71 @@ const updateSlider = (newOptionsObject) => {
 };
 
 const setDefaultSlider = () => {
-  updateSlider(effect['default']);
+  updateSlider(Effect['DEFAULT']);
 };
 
 const updateStyle = (newEffect) => {
   if (newEffect) {
     if (newEffect.filterType === 'none') {
-      preview.style.filter = '';
+      previewElement.style.filter = '';
       return;
     }
-    preview.style.filter = `${newEffect.filterType}(${effectLevelSlider.noUiSlider.get()}${newEffect.unit})`;
+    previewElement.style.filter = `${newEffect.filterType}(${effectLevelSliderElement.noUiSlider.get()}${newEffect.unit})`;
   }
 };
 
 const onEffectChange = (evt) => {
-  if (currentEffectClass.getText()) {
-    preview.classList.remove(currentEffectClass.getText());
+  if (currentEffectClassName.getText()) {
+    previewElement.classList.remove(currentEffectClassName.getText());
   }
 
-  if (!Object.hasOwn(effect, evt.target.value)) {
-    currentEffectName.setText('default');
-    currentEffectClass.setText('');
+  if (!Object.hasOwn(Effect, evt.target.value.toUpperCase())) {
+    currentEffectName.setText('DEFAULT');
+    currentEffectClassName.setText(DEFAULT_EFFECT_PREVIEW_CLASSNAME);
+    previewElement.classList.add(currentEffectClassName.getText());
     setDefaultSlider();
-    effectLevelContainer.classList.add('hidden');
+    effectLevelContainerElement.classList.add('hidden');
   } else {
-    currentEffectName.setText(evt.target.value);
-    currentEffectClass.setText(`effects__preview--${evt.target.value}`);
-    preview.classList.add(currentEffectClass.getText());
+    currentEffectName.setText(evt.target.value.toUpperCase());
+    currentEffectClassName.setText(`effects__preview--${evt.target.value}`);
+    previewElement.classList.add(currentEffectClassName.getText());
+    updateSlider(Effect[evt.target.value.toUpperCase()]);
 
-    updateSlider(effect[evt.target.value]);
-
-    if (effectLevelContainer.classList.contains('hidden')) {
-      effectLevelContainer.classList.remove('hidden');
+    if (effectLevelContainerElement.classList.contains('hidden')) {
+      effectLevelContainerElement.classList.remove('hidden');
     }
   }
 };
 
 const runEffects = () => {
-  currentEffectClass.setText('');
-  effectLevelContainer.classList.add('hidden');
-  effectsList.addEventListener('change', onEffectChange);
-  effectLevelSlider.noUiSlider.on('update', () => {
-    effectLevelField.value = `${effectLevelSlider.noUiSlider.get()}`;
-    updateStyle(effect[currentEffectName.getText()]);
+  currentEffectName.setText('DEFAULT');
+  currentEffectClassName.setText(DEFAULT_EFFECT_PREVIEW_CLASSNAME);
+  previewElement.classList.add(currentEffectClassName.getText());
+  effectLevelContainerElement.classList.add('hidden');
+  effectsListElement.addEventListener('change', onEffectChange);
+
+  effectLevelSliderElement.noUiSlider.on('update', () => {
+    effectLevelFieldElement.value = `${effectLevelSliderElement.noUiSlider.get()}`;
+    updateStyle(Effect[currentEffectName.getText()]);
   });
+
   setDefaultSlider();
 };
 
 const stopEffects = () => {
-  if (currentEffectClass.getText()) {
-    preview.classList.remove(currentEffectClass.getText());
+  if (currentEffectClassName.getText()) {
+    previewElement.classList.remove(currentEffectClassName.getText());
   }
-  defaultEffectElement.checked = true;
-  currentEffectName.setText('default');
-  currentEffectClass.setText('');
-  effectLevelContainer.classList.add('hidden');
+
+  defaultEffectElementElement.checked = true;
+  currentEffectName.setText('DEFAULT');
+  currentEffectClassName.setText('');
+  effectLevelContainerElement.classList.add('hidden');
   setDefaultSlider();
-  effectsList.removeEventListener('change', onEffectChange);
-  effectLevelSlider.noUiSlider.off();
+  effectsListElement.removeEventListener('change', onEffectChange);
+  effectLevelSliderElement.noUiSlider.off();
 };
 
-noUiSlider.create(effectLevelSlider, defaultSlider);
+noUiSlider.create(effectLevelSliderElement, defaultSlider);
 
 export { runEffects, stopEffects };
