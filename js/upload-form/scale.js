@@ -26,6 +26,7 @@ const onScaleButtonClick = (evt) => {
   if (evt.target === increaseButton) {
     newValue = (currentValue + SCALE_STEP > ScaleValue.MAX) ? ScaleValue.MAX : currentValue + SCALE_STEP;
   }
+
   scaleField.value = `${newValue}%`;
   scaleImage();
 };

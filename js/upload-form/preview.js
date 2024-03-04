@@ -12,8 +12,8 @@ const isFileImage = (file) => {
 };
 
 const updatePreview = (fileChooser, preview, updatingProperty, defaultUrl = DEFAULT_IMAGE_URL) => {
-  let newPreviewUrl = defaultUrl;
   const newImage = fileChooser.files[0];
+  let newPreviewUrl = defaultUrl;
 
   if (isFileImage(newImage)) {
     newPreviewUrl = URL.createObjectURL(newImage);
@@ -31,7 +31,6 @@ const updatePreview = (fileChooser, preview, updatingProperty, defaultUrl = DEFA
     default:
       break;
   }
-
 };
 
 export { updatePreview, UpdatingProperty };

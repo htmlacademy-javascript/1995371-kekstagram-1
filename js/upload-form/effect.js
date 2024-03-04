@@ -2,43 +2,43 @@ import { createTextStorage, roundToDecimalOrInteger, getFloat } from '../util.js
 
 const DEFAULT_EFFECT_PREVIEW_CLASSNAME = 'effects__preview--none';
 
-const effect = {
-  'chrome': {
+const Effect = {
+  CHROME: {
     filterType: 'grayscale',
     min: 0,
     max: 1,
     step: 0.1,
     unit: '',
   },
-  'sepia': {
+  SEPIA: {
     filterType: 'sepia',
     min: 0,
     max: 1,
     step: 0.1,
     unit: '',
   },
-  'marvin': {
+  MARVIN: {
     filterType: 'invert',
     min: 0,
     max: 100,
     step: 1,
     unit: '%',
   },
-  'phobos': {
+  PHOBOS: {
     filterType: 'blur',
     min: 0,
     max: 3,
     step: 0.1,
     unit: 'px',
   },
-  'heat': {
+  HEAT: {
     filterType: 'brightness',
     min: 1,
     max: 3,
     step: 0.1,
     unit: '',
   },
-  'default': {
+  DEFAULT: {
     filterType: 'none',
     min: 0,
     max: 100,
@@ -47,17 +47,17 @@ const effect = {
   }
 };
 
-const currentEffectName = createTextStorage('default');
-const currentEffectClass = createTextStorage();
+const currentEffectName = createTextStorage('DEFAULT');
+const currentEffectClassName = createTextStorage();
 
 const defaultSlider = {
-  start: effect['default'].max,
+  start: Effect['DEFAULT'].max,
   connect: 'lower',
   range: {
-    'min': effect['default'].min,
-    'max': effect['default'].max,
+    'min': Effect['DEFAULT'].min,
+    'max': Effect['DEFAULT'].max,
   },
-  step: effect['default'].step,
+  step: Effect['DEFAULT'].step,
   format: {
     to: roundToDecimalOrInteger,
     from: getFloat,
@@ -75,6 +75,7 @@ const defaultEffectElement = effectsList.querySelector('.effects__radio[value=no
 const updateSlider = (newOptionsObject) => {
   if (newOptionsObject) {
     const {max, min, step} = newOptionsObject;
+
     effectLevelSlider.noUiSlider.updateOptions({
       start: max,
       range: {
@@ -87,7 +88,7 @@ const updateSlider = (newOptionsObject) => {
 };
 
 const setDefaultSlider = () => {
-  updateSlider(effect['default']);
+  updateSlider(Effect['DEFAULT']);
 };
 
 const updateStyle = (newEffect) => {
@@ -101,22 +102,21 @@ const updateStyle = (newEffect) => {
 };
 
 const onEffectChange = (evt) => {
-  if (currentEffectClass.getText()) {
-    preview.classList.remove(currentEffectClass.getText());
+  if (currentEffectClassName.getText()) {
+    preview.classList.remove(currentEffectClassName.getText());
   }
 
-  if (!Object.hasOwn(effect, evt.target.value)) {
-    currentEffectName.setText('default');
-    currentEffectClass.setText(DEFAULT_EFFECT_PREVIEW_CLASSNAME);
-    preview.classList.add(currentEffectClass.getText());
+  if (!Object.hasOwn(Effect, evt.target.value.toUpperCase())) {
+    currentEffectName.setText('DEFAULT');
+    currentEffectClassName.setText(DEFAULT_EFFECT_PREVIEW_CLASSNAME);
+    preview.classList.add(currentEffectClassName.getText());
     setDefaultSlider();
     effectLevelContainer.classList.add('hidden');
   } else {
-    currentEffectName.setText(evt.target.value);
-    currentEffectClass.setText(`effects__preview--${evt.target.value}`);
-    preview.classList.add(currentEffectClass.getText());
-
-    updateSlider(effect[evt.target.value]);
+    currentEffectName.setText(evt.target.value.toUpperCase());
+    currentEffectClassName.setText(`effects__preview--${evt.target.value}`);
+    preview.classList.add(currentEffectClassName.getText());
+    updateSlider(Effect[evt.target.value.toUpperCase()]);
 
     if (effectLevelContainer.classList.contains('hidden')) {
       effectLevelContainer.classList.remove('hidden');
@@ -125,24 +125,28 @@ const onEffectChange = (evt) => {
 };
 
 const runEffects = () => {
-  currentEffectClass.setText(DEFAULT_EFFECT_PREVIEW_CLASSNAME);
-  preview.classList.add(currentEffectClass.getText());
+  currentEffectName.setText('DEFAULT');
+  currentEffectClassName.setText(DEFAULT_EFFECT_PREVIEW_CLASSNAME);
+  preview.classList.add(currentEffectClassName.getText());
   effectLevelContainer.classList.add('hidden');
   effectsList.addEventListener('change', onEffectChange);
+
   effectLevelSlider.noUiSlider.on('update', () => {
     effectLevelField.value = `${effectLevelSlider.noUiSlider.get()}`;
-    updateStyle(effect[currentEffectName.getText()]);
+    updateStyle(Effect[currentEffectName.getText()]);
   });
+
   setDefaultSlider();
 };
 
 const stopEffects = () => {
-  if (currentEffectClass.getText()) {
-    preview.classList.remove(currentEffectClass.getText());
+  if (currentEffectClassName.getText()) {
+    preview.classList.remove(currentEffectClassName.getText());
   }
+
   defaultEffectElement.checked = true;
-  currentEffectName.setText('default');
-  currentEffectClass.setText('');
+  currentEffectName.setText('DEFAULT');
+  currentEffectClassName.setText('');
   effectLevelContainer.classList.add('hidden');
   setDefaultSlider();
   effectsList.removeEventListener('change', onEffectChange);

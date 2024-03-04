@@ -2,6 +2,7 @@
 const getRandomInteger = (a, b) => {
   const min = Math.ceil(Math.min(a, b));
   const max = Math.floor(Math.max(a, b));
+
   return Math.floor(Math.random() * (max - min + 1) + min);
 };
 
@@ -9,6 +10,7 @@ const roundToDecimalOrInteger = (value) => {
   if (Number.isInteger(value)) {
     return value.toFixed(0);
   }
+
   return value.toFixed(1);
 };
 
@@ -28,6 +30,7 @@ const isEscapeKeydown = (evt) => evt.key === 'Escape';
 // Функция создания DOM-элемента с классом
 const createNewElement = (tagName, className) => {
   const newElement = document.createElement(tagName);
+
   newElement.classList.add(className);
   return newElement;
 };
@@ -106,7 +109,6 @@ function setValue(newValue) {
 }
 
 // Оптимизация
-
 const debounce = (callback, timeoutDelay = 500) => {
   let timeoutId;
 

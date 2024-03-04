@@ -6,13 +6,13 @@ const successMessageTemplate = document.querySelector('#success').content.queryS
 const messageState = createStateStorage();
 
 const addMessageModal = (modalElement, closeModalButton) => {
-  const modalClass = modalElement.className;
-  const modalInner = modalElement.querySelector(`.${modalClass}__inner`);
+  const modalClassName = modalElement.className;
+  const modalInner = modalElement.querySelector(`.${modalClassName}__inner`);
 
   const closeMessageModal = () => {
     document.body.removeChild(modalElement);
     document.removeEventListener('keydown', onMessageModalEscKeydown);
-    document.body.removeEventListener('click', onWithoutModalClick);
+    document.body.removeEventListener('click', onOutsideModalClick);
     messageState.setState(false);
   };
 
@@ -23,7 +23,7 @@ const addMessageModal = (modalElement, closeModalButton) => {
     }
   }
 
-  function onWithoutModalClick(evt) {
+  function onOutsideModalClick(evt) {
     if (!modalInner.contains(evt.target)) {
       evt.preventDefault();
       closeMessageModal();
@@ -33,7 +33,7 @@ const addMessageModal = (modalElement, closeModalButton) => {
   document.body.append(modalElement);
   closeModalButton.addEventListener('click', closeMessageModal);
   document.addEventListener('keydown', onMessageModalEscKeydown);
-  document.body.addEventListener('click', onWithoutModalClick);
+  document.body.addEventListener('click', onOutsideModalClick);
   messageState.setState(true);
 };
 

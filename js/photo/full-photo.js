@@ -18,6 +18,7 @@ const createComment = (commentInfo) => {
   const comment = createNewElement('li', 'social__comment');
   const commentAuthor = createNewElement('img', 'social__picture');
   const commentText = createNewElement('p', 'social__text');
+
   commentAuthor.src = commentInfo.avatar;
   commentAuthor.alt = commentInfo.name;
   commentAuthor.width = 35;
@@ -30,8 +31,10 @@ const createComment = (commentInfo) => {
 const getComments = (commentsData) => {
   if (commentsData) {
     const fragment = document.createDocumentFragment();
+
     commentsData.forEach((commentInfo) => {
       const commentElement = createComment(commentInfo);
+
       commentElement.classList.add('hidden');
       fragment.append(commentElement);
     });
@@ -41,6 +44,7 @@ const getComments = (commentsData) => {
 
 const showComments = () => {
   const hiddenComments = Array.from(commentsList.querySelectorAll('.social__comment.hidden'));
+
   hiddenComments.slice(0, COMMENTS_PER_TIME).forEach((hiddenComment) => {
     hiddenComment.classList.remove('hidden');
     visibleCommentsQuantity.increase();
@@ -83,13 +87,10 @@ const openFullPhotoModal = ({url, likes = 0, comments = [], description = ''}) =
     likesCount.textContent = likes;
     commentsQuantity.textContent = comments.length;
     commentsList.innerHTML = '';
-
     visibleCommentsQuantity.setValue(0);
     commentsLoader.classList.remove('hidden');
-
     commentsList.append(getComments(comments));
     showComments();
-
     commentsLoader.addEventListener('click', onCommentsLoaderClick);
     document.body.classList.add('modal-open');
     document.addEventListener('keydown', onEscKeydown, {once: true});

@@ -11,6 +11,7 @@ const showAlert = (errorText = ERROR_DEFAULT_TEXT, showTime = ALERT_DEFAULT_SHOW
   errorMessage.textContent = errorText;
   errorElement.append(errorMessage);
   body.append(errorElement);
+
   setTimeout(() => {
     body.removeChild(errorElement);
   }, showTime);

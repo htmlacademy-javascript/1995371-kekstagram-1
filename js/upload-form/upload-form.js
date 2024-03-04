@@ -24,7 +24,6 @@ const SubmitButtonText = {
 const hashtagFocusState = createStateStorage();
 const descriptionFocusState = createStateStorage();
 
-// Код показа формы
 const openImageEditingModal = () => {
   imageEditingModal.classList.remove('hidden');
   document.body.classList.add('modal-open');
@@ -34,7 +33,6 @@ const openImageEditingModal = () => {
   runEffects();
 };
 
-// Код закрытия формы
 const closeOpenImageEditingModal = () => {
   imageEditingModal.classList.add('hidden');
   document.body.classList.remove('modal-open');
@@ -105,8 +103,9 @@ const onEditingModalFocusout = (evt) => {
 };
 
 const onUploadFormSubmit = (evt) => {
-  evt.preventDefault();
   const valid = pristine.validate();
+
+  evt.preventDefault();
   disableSubmitButton();
 
   if (!valid) {

@@ -2,8 +2,8 @@ import { shuffleArray, moveSomeClassName, debounce } from '../util.js';
 import { renderThumbs, clearThumbs } from './thumb.js';
 
 const RANDOM_PHOTO_QUANTITY = 10;
-const FILTERS_CONTAINER_HIDING_CLASS = 'img-filters--inactive';
-const CURRENT_FILTER_CLASS = 'img-filters__button--active';
+const FILTERS_CONTAINER_HIDING_CLASSNAME = 'img-filters--inactive';
+const CURRENT_FILTER_CLASSNAME = 'img-filters__button--active';
 const FILTER_TIMEOUT = 500;
 
 const filterContainer = document.querySelector('.img-filters');
@@ -20,7 +20,7 @@ const updateCurrentFilter = (newElement) => {
     return;
   }
 
-  moveSomeClassName(currentFilter, newElement, CURRENT_FILTER_CLASS);
+  moveSomeClassName(currentFilter, newElement, CURRENT_FILTER_CLASSNAME);
   currentFilter = newElement;
 };
 
@@ -67,8 +67,8 @@ const onDiscussedFilterButtonClick = (photoData, cb) => () => {
 const setFilters = (photoData) => {
   currentFilter = defaultFilterButton;
 
-  if (filterContainer.classList.contains(FILTERS_CONTAINER_HIDING_CLASS)) {
-    filterContainer.classList.remove(FILTERS_CONTAINER_HIDING_CLASS);
+  if (filterContainer.classList.contains(FILTERS_CONTAINER_HIDING_CLASSNAME)) {
+    filterContainer.classList.remove(FILTERS_CONTAINER_HIDING_CLASSNAME);
   }
 
   defaultFilterButton.addEventListener('click', onDefaultFilterButtonClick(photoData, (data) => rerenderThumbs(data)));
