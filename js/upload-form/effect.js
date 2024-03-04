@@ -1,5 +1,7 @@
 import { createTextStorage, roundToDecimalOrInteger, getFloat } from '../util.js';
 
+const DEFAULT_EFFECT_PREVIEW_CLASSNAME = 'effects__preview--none';
+
 const effect = {
   'chrome': {
     filterType: 'grayscale',
@@ -105,7 +107,8 @@ const onEffectChange = (evt) => {
 
   if (!Object.hasOwn(effect, evt.target.value)) {
     currentEffectName.setText('default');
-    currentEffectClass.setText('');
+    currentEffectClass.setText(DEFAULT_EFFECT_PREVIEW_CLASSNAME);
+    preview.classList.add(currentEffectClass.getText());
     setDefaultSlider();
     effectLevelContainer.classList.add('hidden');
   } else {
@@ -122,7 +125,8 @@ const onEffectChange = (evt) => {
 };
 
 const runEffects = () => {
-  currentEffectClass.setText('');
+  currentEffectClass.setText(DEFAULT_EFFECT_PREVIEW_CLASSNAME);
+  preview.classList.add(currentEffectClass.getText());
   effectLevelContainer.classList.add('hidden');
   effectsList.addEventListener('change', onEffectChange);
   effectLevelSlider.noUiSlider.on('update', () => {
