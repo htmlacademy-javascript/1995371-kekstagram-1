@@ -1,16 +1,37 @@
 const DEFAULT_IMAGE_URL = 'img/upload-default-image.jpg';
 const FILE_TYPES = ['png', 'jpg', 'jpeg'];
 
-const updatePreview = (fileChooser, preview, defaultUrl = DEFAULT_IMAGE_URL) => {
+const UpdatingProperty = {
+  SRC: 'src',
+  BACKGROUND: 'backgroundImage',
+};
+
+const isFileImage = (file) => {
+  const newImageName = file.name.toLowerCase();
+  return FILE_TYPES.some((type) => newImageName.endsWith(type));
+};
+
+const updatePreview = (fileChooser, preview, updatingProperty, defaultUrl = DEFAULT_IMAGE_URL) => {
   let newPreviewUrl = defaultUrl;
   const newImage = fileChooser.files[0];
-  const newImageName = newImage.name.toLowerCase();
 
-  if (FILE_TYPES.some((type) => newImageName.endsWith(type))) {
+  if (isFileImage(newImage)) {
     newPreviewUrl = URL.createObjectURL(newImage);
   }
 
-  preview.src = newPreviewUrl;
+  switch (updatingProperty) {
+    case UpdatingProperty['SRC']:
+      preview.src = newPreviewUrl;
+      break;
+
+    case UpdatingProperty['BACKGROUND']:
+      preview.style.backgroundImage = `url(${newPreviewUrl})`;
+      break;
+
+    default:
+      break;
+  }
+
 };
 
-export { updatePreview };
+export { updatePreview, UpdatingProperty };

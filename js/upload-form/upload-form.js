@@ -4,7 +4,7 @@ import { runScaleSection, stopScaleSection } from './scale.js';
 import { runEffects, stopEffects } from './effect.js';
 import { showSuccessModal, showErrorModal, messageState } from './message-modal.js';
 import { sendData } from '../api.js';
-import { updatePreview } from './preview.js';
+import { updatePreview, UpdatingProperty } from './preview.js';
 
 const uploadForm = document.querySelector('#upload-select-image');
 const uploadImageButton = uploadForm.querySelector('#upload-file');
@@ -14,6 +14,7 @@ const closeButton = imageEditingModal.querySelector('#upload-cancel');
 const submitButton = imageEditingModal.querySelector('.img-upload__submit');
 const hashtagInput = imageEditingModal.querySelector('.text__hashtags');
 const descriptionInput = imageEditingModal.querySelector('.text__description');
+const effectsPreviews = imageEditingModal.querySelectorAll('.effects__preview');
 
 const SubmitButtonText = {
   DEFAULT: 'Опубликовать',
@@ -56,7 +57,12 @@ const enableSubmitButton = () => {
 };
 
 const onUploadImageButtonChange = (evt) => {
-  updatePreview(evt.target, preview);
+  updatePreview(evt.target, preview, UpdatingProperty['SRC']);
+
+  for (const effectPreview of effectsPreviews) {
+    updatePreview(evt.target, effectPreview, UpdatingProperty['BACKGROUND']);
+  }
+
   openImageEditingModal();
 };
 
