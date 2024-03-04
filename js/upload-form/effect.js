@@ -64,19 +64,19 @@ const defaultSlider = {
   },
 };
 
-const uploadForm = document.querySelector('#upload-select-image');
-const effectLevelContainer = uploadForm.querySelector('.img-upload__effect-level');
-const effectLevelSlider = effectLevelContainer.querySelector('.effect-level__slider');
-const effectLevelField = effectLevelContainer.querySelector('.effect-level__value');
-const preview = uploadForm.querySelector('.img-upload__preview img');
-const effectsList = uploadForm.querySelector('.effects__list');
-const defaultEffectElement = effectsList.querySelector('.effects__radio[value=none]');
+const uploadFormElement = document.querySelector('#upload-select-image');
+const effectLevelContainerElement = uploadFormElement.querySelector('.img-upload__effect-level');
+const effectLevelSliderElement = effectLevelContainerElement.querySelector('.effect-level__slider');
+const effectLevelFieldElement = effectLevelContainerElement.querySelector('.effect-level__value');
+const previewElement = uploadFormElement.querySelector('.img-upload__preview img');
+const effectsListElement = uploadFormElement.querySelector('.effects__list');
+const defaultEffectElementElement = effectsListElement.querySelector('.effects__radio[value=none]');
 
 const updateSlider = (newOptionsObject) => {
   if (newOptionsObject) {
     const {max, min, step} = newOptionsObject;
 
-    effectLevelSlider.noUiSlider.updateOptions({
+    effectLevelSliderElement.noUiSlider.updateOptions({
       start: max,
       range: {
         'min': min,
@@ -94,32 +94,32 @@ const setDefaultSlider = () => {
 const updateStyle = (newEffect) => {
   if (newEffect) {
     if (newEffect.filterType === 'none') {
-      preview.style.filter = '';
+      previewElement.style.filter = '';
       return;
     }
-    preview.style.filter = `${newEffect.filterType}(${effectLevelSlider.noUiSlider.get()}${newEffect.unit})`;
+    previewElement.style.filter = `${newEffect.filterType}(${effectLevelSliderElement.noUiSlider.get()}${newEffect.unit})`;
   }
 };
 
 const onEffectChange = (evt) => {
   if (currentEffectClassName.getText()) {
-    preview.classList.remove(currentEffectClassName.getText());
+    previewElement.classList.remove(currentEffectClassName.getText());
   }
 
   if (!Object.hasOwn(Effect, evt.target.value.toUpperCase())) {
     currentEffectName.setText('DEFAULT');
     currentEffectClassName.setText(DEFAULT_EFFECT_PREVIEW_CLASSNAME);
-    preview.classList.add(currentEffectClassName.getText());
+    previewElement.classList.add(currentEffectClassName.getText());
     setDefaultSlider();
-    effectLevelContainer.classList.add('hidden');
+    effectLevelContainerElement.classList.add('hidden');
   } else {
     currentEffectName.setText(evt.target.value.toUpperCase());
     currentEffectClassName.setText(`effects__preview--${evt.target.value}`);
-    preview.classList.add(currentEffectClassName.getText());
+    previewElement.classList.add(currentEffectClassName.getText());
     updateSlider(Effect[evt.target.value.toUpperCase()]);
 
-    if (effectLevelContainer.classList.contains('hidden')) {
-      effectLevelContainer.classList.remove('hidden');
+    if (effectLevelContainerElement.classList.contains('hidden')) {
+      effectLevelContainerElement.classList.remove('hidden');
     }
   }
 };
@@ -127,12 +127,12 @@ const onEffectChange = (evt) => {
 const runEffects = () => {
   currentEffectName.setText('DEFAULT');
   currentEffectClassName.setText(DEFAULT_EFFECT_PREVIEW_CLASSNAME);
-  preview.classList.add(currentEffectClassName.getText());
-  effectLevelContainer.classList.add('hidden');
-  effectsList.addEventListener('change', onEffectChange);
+  previewElement.classList.add(currentEffectClassName.getText());
+  effectLevelContainerElement.classList.add('hidden');
+  effectsListElement.addEventListener('change', onEffectChange);
 
-  effectLevelSlider.noUiSlider.on('update', () => {
-    effectLevelField.value = `${effectLevelSlider.noUiSlider.get()}`;
+  effectLevelSliderElement.noUiSlider.on('update', () => {
+    effectLevelFieldElement.value = `${effectLevelSliderElement.noUiSlider.get()}`;
     updateStyle(Effect[currentEffectName.getText()]);
   });
 
@@ -141,18 +141,18 @@ const runEffects = () => {
 
 const stopEffects = () => {
   if (currentEffectClassName.getText()) {
-    preview.classList.remove(currentEffectClassName.getText());
+    previewElement.classList.remove(currentEffectClassName.getText());
   }
 
-  defaultEffectElement.checked = true;
+  defaultEffectElementElement.checked = true;
   currentEffectName.setText('DEFAULT');
   currentEffectClassName.setText('');
-  effectLevelContainer.classList.add('hidden');
+  effectLevelContainerElement.classList.add('hidden');
   setDefaultSlider();
-  effectsList.removeEventListener('change', onEffectChange);
-  effectLevelSlider.noUiSlider.off();
+  effectsListElement.removeEventListener('change', onEffectChange);
+  effectLevelSliderElement.noUiSlider.off();
 };
 
-noUiSlider.create(effectLevelSlider, defaultSlider);
+noUiSlider.create(effectLevelSliderElement, defaultSlider);
 
 export { runEffects, stopEffects };

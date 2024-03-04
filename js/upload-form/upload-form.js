@@ -6,15 +6,15 @@ import { showSuccessModal, showErrorModal, messageState } from './message-modal.
 import { sendData } from '../api.js';
 import { updatePreview, UpdatingProperty } from './preview.js';
 
-const uploadForm = document.querySelector('#upload-select-image');
-const uploadImageButton = uploadForm.querySelector('#upload-file');
-const preview = uploadForm.querySelector('.img-upload__preview img');
-const imageEditingModal = uploadForm.querySelector('.img-upload__overlay');
-const closeButton = imageEditingModal.querySelector('#upload-cancel');
-const submitButton = imageEditingModal.querySelector('.img-upload__submit');
-const hashtagInput = imageEditingModal.querySelector('.text__hashtags');
-const descriptionInput = imageEditingModal.querySelector('.text__description');
-const effectsPreviews = imageEditingModal.querySelectorAll('.effects__preview');
+const uploadFormElement = document.querySelector('#upload-select-image');
+const uploadImageButtonElement = uploadFormElement.querySelector('#upload-file');
+const previewElement = uploadFormElement.querySelector('.img-upload__preview img');
+const imageEditingModalElement = uploadFormElement.querySelector('.img-upload__overlay');
+const closeButtonElement = imageEditingModalElement.querySelector('#upload-cancel');
+const submitButtonElement = imageEditingModalElement.querySelector('.img-upload__submit');
+const hashtagInputElement = imageEditingModalElement.querySelector('.text__hashtags');
+const descriptionInputElement = imageEditingModalElement.querySelector('.text__description');
+const effectsPreviewsElement = imageEditingModalElement.querySelectorAll('.effects__preview');
 
 const SubmitButtonText = {
   DEFAULT: 'Опубликовать',
@@ -25,39 +25,39 @@ const hashtagFocusState = createStateStorage();
 const descriptionFocusState = createStateStorage();
 
 const openImageEditingModal = () => {
-  imageEditingModal.classList.remove('hidden');
+  imageEditingModalElement.classList.remove('hidden');
   document.body.classList.add('modal-open');
   document.addEventListener('keydown', onFormEscKeydown);
-  closeButton.addEventListener('click', onCloseButtonClick);
+  closeButtonElement.addEventListener('click', onCloseButtonClick);
   runScaleSection();
   runEffects();
 };
 
 const closeOpenImageEditingModal = () => {
-  imageEditingModal.classList.add('hidden');
+  imageEditingModalElement.classList.add('hidden');
   document.body.classList.remove('modal-open');
   document.removeEventListener('keydown', onFormEscKeydown);
-  closeButton.removeEventListener('click', onCloseButtonClick);
+  closeButtonElement.removeEventListener('click', onCloseButtonClick);
   stopScaleSection();
   stopEffects();
   resetValidation();
-  uploadForm.reset();
+  uploadFormElement.reset();
 };
 
 const disableSubmitButton = () => {
-  submitButton.disabled = true;
-  submitButton.textContent = SubmitButtonText.POSTING;
+  submitButtonElement.disabled = true;
+  submitButtonElement.textContent = SubmitButtonText.POSTING;
 };
 
 const enableSubmitButton = () => {
-  submitButton.disabled = false;
-  submitButton.textContent = SubmitButtonText.DEFAULT;
+  submitButtonElement.disabled = false;
+  submitButtonElement.textContent = SubmitButtonText.DEFAULT;
 };
 
 const onUploadImageButtonChange = (evt) => {
-  updatePreview(evt.target, preview, UpdatingProperty['SRC']);
+  updatePreview(evt.target, previewElement, UpdatingProperty['SRC']);
 
-  for (const effectPreview of effectsPreviews) {
+  for (const effectPreview of effectsPreviewsElement) {
     updatePreview(evt.target, effectPreview, UpdatingProperty['BACKGROUND']);
   }
 
@@ -80,11 +80,11 @@ function onCloseButtonClick () {
 
 const onEditingModalFocusin = (evt) => {
   switch (evt.target) {
-    case hashtagInput:
+    case hashtagInputElement:
       hashtagFocusState.setState(true);
       break;
 
-    case descriptionInput:
+    case descriptionInputElement:
       descriptionFocusState.setState(true);
       break;
   }
@@ -92,11 +92,11 @@ const onEditingModalFocusin = (evt) => {
 
 const onEditingModalFocusout = (evt) => {
   switch (evt.target) {
-    case hashtagInput:
+    case hashtagInputElement:
       hashtagFocusState.setState(false);
       break;
 
-    case descriptionInput:
+    case descriptionInputElement:
       descriptionFocusState.setState(false);
       break;
   }
@@ -121,7 +121,7 @@ const onUploadFormSubmit = (evt) => {
     .finally(enableSubmitButton);
 };
 
-uploadImageButton.addEventListener('change', onUploadImageButtonChange);
-imageEditingModal.addEventListener('focusin', onEditingModalFocusin);
-imageEditingModal.addEventListener('focusout', onEditingModalFocusout);
-uploadForm.addEventListener('submit', onUploadFormSubmit);
+uploadImageButtonElement.addEventListener('change', onUploadImageButtonChange);
+imageEditingModalElement.addEventListener('focusin', onEditingModalFocusin);
+imageEditingModalElement.addEventListener('focusout', onEditingModalFocusout);
+uploadFormElement.addEventListener('submit', onUploadFormSubmit);

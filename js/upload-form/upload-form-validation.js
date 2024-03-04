@@ -4,8 +4,8 @@ const HASHTAGS_MAX_QUANTITY = 5;
 const HASHTAG_MAX_LENGTH = 20;
 const REGEX_NOT_ALPHANUMERIC = /[^a-zа-я0-9]/;
 
-const uploadForm = document.querySelector('#upload-select-image');
-const hashtagInput = uploadForm.querySelector('.text__hashtags');
+const uploadFormElement = document.querySelector('#upload-select-image');
+const hashtagInputElement = uploadFormElement.querySelector('.text__hashtags');
 
 const HashtagErrorMessage = {
   NOT_SHARP_FIRST: 'Хэш-тег должен начинаться с символа # (решётка)',
@@ -28,7 +28,7 @@ const isContentUnique = (data) => {
   return data.length === uniqueElements.size;
 };
 
-const pristine = new Pristine(uploadForm, {
+const pristine = new Pristine(uploadFormElement, {
   classTo: 'img-upload__field-wrapper',
   errorTextParent: 'img-upload__field-wrapper',
   errorTextClass: 'img-upload__validation-error',
@@ -71,6 +71,6 @@ const getHashtageErrorMessage = () => hashtageErrorMessage.getText();
 const resetValidation = () => pristine.reset();
 
 
-pristine.addValidator(hashtagInput, validateHashtags, getHashtageErrorMessage);
+pristine.addValidator(hashtagInputElement, validateHashtags, getHashtageErrorMessage);
 
 export { resetValidation, pristine };

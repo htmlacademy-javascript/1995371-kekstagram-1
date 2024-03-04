@@ -1,13 +1,13 @@
 import { isEscapeKeydown, createStateStorage } from '../util.js';
 
-const errorMessageTemplate = document.querySelector('#error').content.querySelector('.error');
-const successMessageTemplate = document.querySelector('#success').content.querySelector('.success');
+const errorMessageTemplateElement = document.querySelector('#error').content.querySelector('.error');
+const successMessageTemplateElement = document.querySelector('#success').content.querySelector('.success');
 
 const messageState = createStateStorage();
 
 const addMessageModal = (modalElement, closeModalButton) => {
   const modalClassName = modalElement.className;
-  const modalInner = modalElement.querySelector(`.${modalClassName}__inner`);
+  const modalInnerElement = modalElement.querySelector(`.${modalClassName}__inner`);
 
   const closeMessageModal = () => {
     document.body.removeChild(modalElement);
@@ -24,7 +24,7 @@ const addMessageModal = (modalElement, closeModalButton) => {
   }
 
   function onOutsideModalClick(evt) {
-    if (!modalInner.contains(evt.target)) {
+    if (!modalInnerElement.contains(evt.target)) {
       evt.preventDefault();
       closeMessageModal();
     }
@@ -38,25 +38,25 @@ const addMessageModal = (modalElement, closeModalButton) => {
 };
 
 const showSuccessModal = (cb) => () => {
-  const successMessageModal = successMessageTemplate.cloneNode(true);
-  const closeMessageButton = successMessageModal.querySelector('.success__button');
+  const successMessageModalElement = successMessageTemplateElement.cloneNode(true);
+  const closeMessageButtonElement = successMessageModalElement.querySelector('.success__button');
 
   if (cb) {
     cb();
   }
 
-  addMessageModal(successMessageModal, closeMessageButton);
+  addMessageModal(successMessageModalElement, closeMessageButtonElement);
 };
 
 const showErrorModal = (cb) => () => {
-  const errorMessageModal = errorMessageTemplate.cloneNode(true);
-  const closeMessageButton = errorMessageModal.querySelector('.error__button');
+  const errorMessageModalElement = errorMessageTemplateElement.cloneNode(true);
+  const closeMessageButtonElement = errorMessageModalElement.querySelector('.error__button');
 
   if (cb) {
     cb();
   }
 
-  addMessageModal(errorMessageModal, closeMessageButton);
+  addMessageModal(errorMessageModalElement, closeMessageButtonElement);
 };
 
 export { showSuccessModal, showErrorModal, messageState };

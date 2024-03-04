@@ -6,12 +6,12 @@ const FILTERS_CONTAINER_HIDING_CLASSNAME = 'img-filters--inactive';
 const CURRENT_FILTER_CLASSNAME = 'img-filters__button--active';
 const FILTER_TIMEOUT = 500;
 
-const filterContainer = document.querySelector('.img-filters');
-const defaultFilterButton = filterContainer.querySelector('#filter-default');
-const randomFilterButton = filterContainer.querySelector('#filter-random');
-const discussedFilterButton = filterContainer.querySelector('#filter-discussed');
+const filterContainerElement = document.querySelector('.img-filters');
+const defaultFilterButtonElement = filterContainerElement.querySelector('#filter-default');
+const randomFilterButtonElement = filterContainerElement.querySelector('#filter-random');
+const discussedFilterButtonElement = filterContainerElement.querySelector('#filter-discussed');
 
-let currentFilter = defaultFilterButton;
+let currentFilterElement = defaultFilterButtonElement;
 
 const sortByCommentsQuantity = (a, b) => b.comments.length - a.comments.length;
 
@@ -20,8 +20,8 @@ const updateCurrentFilter = (newElement) => {
     return;
   }
 
-  moveSomeClassName(currentFilter, newElement, CURRENT_FILTER_CLASSNAME);
-  currentFilter = newElement;
+  moveSomeClassName(currentFilterElement, newElement, CURRENT_FILTER_CLASSNAME);
+  currentFilterElement = newElement;
 };
 
 const rerenderThumbs = debounce((data) => {
@@ -32,11 +32,11 @@ const rerenderThumbs = debounce((data) => {
 const onDefaultFilterButtonClick = (photoData, cb) => () => {
   cb(photoData);
 
-  if (currentFilter === defaultFilterButton) {
+  if (currentFilterElement === defaultFilterButtonElement) {
     return;
   }
 
-  updateCurrentFilter(defaultFilterButton);
+  updateCurrentFilter(defaultFilterButtonElement);
 };
 
 const onRandomFilterButtonClick = (photoData, cb) => () => {
@@ -45,11 +45,11 @@ const onRandomFilterButtonClick = (photoData, cb) => () => {
   shuffleArray(randomPhoto);
   cb(randomPhoto.slice(0, RANDOM_PHOTO_QUANTITY));
 
-  if (currentFilter === randomFilterButton) {
+  if (currentFilterElement === randomFilterButtonElement) {
     return;
   }
 
-  updateCurrentFilter(randomFilterButton);
+  updateCurrentFilter(randomFilterButtonElement);
 };
 
 const onDiscussedFilterButtonClick = (photoData, cb) => () => {
@@ -57,23 +57,23 @@ const onDiscussedFilterButtonClick = (photoData, cb) => () => {
 
   cb(discussedPhotoData);
 
-  if (currentFilter === discussedFilterButton) {
+  if (currentFilterElement === discussedFilterButtonElement) {
     return;
   }
 
-  updateCurrentFilter(discussedFilterButton);
+  updateCurrentFilter(discussedFilterButtonElement);
 };
 
 const setFilters = (photoData) => {
-  currentFilter = defaultFilterButton;
+  currentFilterElement = defaultFilterButtonElement;
 
-  if (filterContainer.classList.contains(FILTERS_CONTAINER_HIDING_CLASSNAME)) {
-    filterContainer.classList.remove(FILTERS_CONTAINER_HIDING_CLASSNAME);
+  if (filterContainerElement.classList.contains(FILTERS_CONTAINER_HIDING_CLASSNAME)) {
+    filterContainerElement.classList.remove(FILTERS_CONTAINER_HIDING_CLASSNAME);
   }
 
-  defaultFilterButton.addEventListener('click', onDefaultFilterButtonClick(photoData, (data) => rerenderThumbs(data)));
-  randomFilterButton.addEventListener('click', onRandomFilterButtonClick(photoData, (data) => rerenderThumbs(data)));
-  discussedFilterButton.addEventListener('click', onDiscussedFilterButtonClick(photoData, (data) => rerenderThumbs(data)));
+  defaultFilterButtonElement.addEventListener('click', onDefaultFilterButtonClick(photoData, (data) => rerenderThumbs(data)));
+  randomFilterButtonElement.addEventListener('click', onRandomFilterButtonClick(photoData, (data) => rerenderThumbs(data)));
+  discussedFilterButtonElement.addEventListener('click', onDiscussedFilterButtonClick(photoData, (data) => rerenderThumbs(data)));
 };
 
 export { setFilters };

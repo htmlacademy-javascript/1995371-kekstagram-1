@@ -1,28 +1,28 @@
 import { openFullPhotoModal } from './full-photo.js';
 
-const thumbTemplate = document.querySelector('#picture').content.querySelector('.picture');
-const thumbsContainer = document.querySelector('.pictures');
+const thumbTemplateElement = document.querySelector('#picture').content.querySelector('.picture');
+const thumbsContainerElement = document.querySelector('.pictures');
 
 const renderThumbs = (photoData) => {
   if (photoData) {
     const thumbsFragment = document.createDocumentFragment();
 
     photoData.forEach((photo) => {
-      const thumb = thumbTemplate.cloneNode(true);
+      const thumbElement = thumbTemplateElement.cloneNode(true);
 
-      thumb.querySelector('.picture__img').src = photo.url;
-      thumb.querySelector('.picture__likes').textContent = photo.likes;
-      thumb.querySelector('.picture__comments').textContent = photo.comments.length;
-      thumb.addEventListener('click', () => openFullPhotoModal(photo));
-      thumbsFragment.append(thumb);
+      thumbElement.querySelector('.picture__img').src = photo.url;
+      thumbElement.querySelector('.picture__likes').textContent = photo.likes;
+      thumbElement.querySelector('.picture__comments').textContent = photo.comments.length;
+      thumbElement.addEventListener('click', () => openFullPhotoModal(photo));
+      thumbsFragment.append(thumbElement);
     });
 
-    thumbsContainer.append(thumbsFragment);
+    thumbsContainerElement.append(thumbsFragment);
   }
 };
 
 const clearThumbs = () => {
-  thumbsContainer.querySelectorAll('a.picture').forEach((element) => thumbsContainer.removeChild(element));
+  thumbsContainerElement.querySelectorAll('a.picture').forEach((element) => thumbsContainerElement.removeChild(element));
 };
 
 export { renderThumbs, clearThumbs };
